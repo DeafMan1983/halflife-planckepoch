@@ -4,7 +4,6 @@
 #include <stdexcept>
 
 #include "FranAudioAPI.hpp"
-#include "FranAudio.hpp"
 
 namespace FranAudio
 {
