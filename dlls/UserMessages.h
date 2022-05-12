@@ -21,9 +21,6 @@ inline int gmsgFlashlight = 0;
 inline int gmsgFlashBattery = 0;
 inline int gmsgResetHUD = 0;
 inline int gmsgInitHUD = 0;
-inline int gmsgKeyedDLight = 0; // LRC
-inline int gmsgKeyedELight = 0; // LRC
-inline int gmsgSetSky = 0;		// LRC
 inline int gmsgHUDColor = 0;	// LRC
 inline int gmsgAddShine = 0;	// LRC
 inline int gmsgParticle = 0;	// LRC
@@ -61,22 +58,23 @@ inline int gmsgStatusIcon = 0; //LRC
 inline int gmsgStatusText = 0;
 inline int gmsgStatusValue = 0;
 inline int gmsgCamData = 0; // for trigger_viewset
-inline int gmsgRainData = 0;
 inline int gmsgInventory = 0; //AJH Inventory system
 inline int gmsgWeapons = 0;
 
 //RENDERERS START
-inline int gmsgSetFog;
-inline int gmsgLightStyle;
-inline int gmsgCreateDecal;
-inline int gmsgStudioDecal;
-inline int gmsgCreateDLight;
-inline int gmsgFreeEnt;
-inline int gmsgSkyMark_Sky;
-inline int gmsgSkyMark_World;
-inline int gmsgCreateSystem;
-inline int gmsgPPGray;
-inline int gmsgViewmodelSkin;
+inline int gmsgSetFog = 0;
+inline int gmsgLightStyle = 0;
+inline int gmsgCreateDecal = 0;
+inline int gmsgStudioDecal = 0;
+inline int gmsgCreateDLight = 0;
+inline int gmsgFreeEnt = 0;
+inline int gmsgSkyMark_Sky = 0;
+inline int gmsgSkyMark_World = 0;
+inline int gmsgCreateSystem = 0;
+inline int gmsgPPGray = 0;
+inline int gmsgViewmodelSkin = 0;
 //RENDERERS END
+
+inline int gmsgCreateSound = 0;
 
 void LinkUserMessages();

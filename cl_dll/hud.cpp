@@ -51,6 +51,8 @@ extra_player_info_t g_PlayerExtraInfo[MAX_PLAYERS_HUD + 1]; // additional player
 #define FRANUTILS_MODDIR 1 // For usage of mod directory utilites
 #include "FranUtils.hpp"
 
+#include "FranAudio/FranAudio.hpp"
+
 #include "studio.h"
 #include "StudioModelRenderer.h"
 #include "GameStudioModelRenderer.h"
@@ -126,29 +128,9 @@ int __MsgFunc_HUDColor(const char* pszName, int iSize, void* pbuf)
 	return gHUD.MsgFunc_HUDColor(pszName, iSize, pbuf);
 }
 
-//LRC
-int __MsgFunc_KeyedDLight(const char *pszName, int iSize, void *pbuf)
-{
-	gHUD.MsgFunc_KeyedDLight(pszName, iSize, pbuf);
-	return 1;
-}
-
 int __MsgFunc_Test(const char* pszName, int iSize, void* pbuf)
 {
 	return 1;
-}
-
-//LRC
-int __MsgFunc_SetSky(const char* pszName, int iSize, void* pbuf)
-{
-	gHUD.MsgFunc_SetSky(pszName, iSize, pbuf);
-	return 1;
-}
-
-// G-Cont. rain message
-int __MsgFunc_RainData(const char* pszName, int iSize, void* pbuf)
-{
-	return gHUD.MsgFunc_RainData(pszName, iSize, pbuf);
 }
 
 //LRC 1.8
@@ -417,6 +399,11 @@ int __MsgFunc_WpnSkn(const char* pszName, int iSize, void* pbuf)
 	gHUD.MsgFunc_WpnSkn(pszName, iSize, pbuf);
 	return 1;
 }
+int __MsgFunc_CreateSound(const char* pszName, int iSize, void* pbuf)
+{
+	gHUD.MsgFunc_CreateSound(pszName, iSize, pbuf);
+	return 1;
+}
 
 
 //void InitPostEffects(); //Forward Declaration for Post-Processing
@@ -442,12 +429,9 @@ void CHud::Init()
 	HOOK_MESSAGE(Concuss);
 	HOOK_MESSAGE(Weapons);
 	HOOK_MESSAGE(HUDColor);	   //LRC
-	HOOK_MESSAGE(KeyedDLight); //LRC
-							   //	HOOK_MESSAGE( KeyedELight ); //LRC
+							  
 	HOOK_MESSAGE(Test);		   //LRC
-	HOOK_MESSAGE(SetSky);	   //LRC
 	HOOK_MESSAGE(CamData);	   //G-Cont. for new camera style
-	HOOK_MESSAGE(RainData);	   //G-Cont. for rain control
 	HOOK_MESSAGE(Inventory);   //AJH Inventory system
 	HOOK_MESSAGE(ClampView);   //LRC 1.8
 
@@ -502,6 +486,8 @@ void CHud::Init()
 	HOOK_MESSAGE( Particle );
 	HOOK_MESSAGE( PPGray );
 	HOOK_MESSAGE( WpnSkn );
+
+	HOOK_MESSAGE( CreateSound );
 
 	gPropManager.Init();
 	gTextureLoader.Init();
@@ -577,6 +563,8 @@ void CHud::Init()
 
 	m_clImgui.Init();
 
+	FranAudio::Globals::Init(FranUtils::GetModDirectory("\\sound\\").c_str(), (std::filesystem::current_path().string() + "\\" + FranUtils::Globals::GetFallbackDir() + "\\sound\\").c_str());
+
 	m_Menu.Init();
 
 	MsgFunc_ResetHUD(nullptr, 0, nullptr);
@@ -610,6 +598,10 @@ CHud::~CHud()
 	gTextureLoader.Shutdown();
 	gBSPRenderer.Shutdown();
 	//RENDERERS END
+
+	FranAudio::Globals::Shutdown();
+
+	FranUtils::ForceShutdown();
 }
 
 // GetSpriteIndex()
@@ -793,7 +785,7 @@ bool CHud::MsgFunc_HUDColor(const char* pszName, int iSize, void* pbuf)
 
 	m_iHUDColor = READ_LONG();
 
-	return 1;
+	return TRUE;
 }
 
 float g_lastFOV = 0.0;
@@ -895,7 +887,7 @@ bool CHud::MsgFunc_SetFOV(const char* pszName, int iSize, void* pbuf)
 	BEGIN_READ(pbuf, iSize);
 
 	int newfov = READ_BYTE();
-	int def_fov = CVAR_GET_FLOAT("default_fov");
+	int def_fov = gEngfuncs.pfnGetCvarFloat("default_fov");
 
 	//Weapon prediction already takes care of changing the fog. ( g_lastFOV ).
 	//But it doesn't restore correctly so this still needs to be used

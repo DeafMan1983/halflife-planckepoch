@@ -5,6 +5,9 @@
 #ifndef FRANUTILS_H
 #define FRANUTILS_H
 
+#include "const.h"
+#include "UserMessages.h"
+
 #include <string>
 
 // ==========================================================
@@ -368,7 +371,6 @@ namespace FranUtils
 		return *(long*)(&x);
 	}
 
-#if defined(ENGINECALLBACK_H) && !defined(CLIENT_DLL)
 	/**
 	* For Emitting A Dynamic Light
 	*
@@ -380,6 +382,7 @@ namespace FranUtils
 	*/
 	inline void EmitDlight(Vector emitOrigin, int radius, Vector colour, float time, int decay)
 	{
+#if defined(ENGINECALLBACK_H) && !defined(CLIENT_DLL)
 		MESSAGE_BEGIN(MSG_PVS, gmsgCreateDLight, emitOrigin);
 			//WRITE_BYTE(TE_DLIGHT);
 			WRITE_COORD(emitOrigin.x);	// X
@@ -392,8 +395,35 @@ namespace FranUtils
 			WRITE_LONG(FranUtils::ftol_asm(time));  //WRITE_BYTE(time);			// time * 10
 			WRITE_BYTE(decay);			// decay * 0.1
 		MESSAGE_END();
-	}
 #endif
+	}
+
+
+	/**
+	 * For Emitting A Sound
+	 *
+	 * @param _entity : Owner Entity of the Sound
+	 * @param _channel : Channel of the Sound
+	 * @param _sample : Sound Sample File
+	 * @param _volume : Volume
+	 * @param _attenuation : Attenuation
+	 * @param _flags : Sound Flags
+	 * @param _pitch : Pitch
+	 */
+	inline void EmitSound(entvars_t* _entity, int _channel, const char* _sample, float _volume, float _attenuation, int _flags, int _pitch)
+	{
+#if defined(ENGINECALLBACK_H) && !defined(CLIENT_DLL)
+		MESSAGE_BEGIN(MSG_PVS, gmsgCreateSound, _entity->origin);
+			WRITE_SHORT(CBaseEntity::Instance(_entity)->entindex());
+			WRITE_SHORT(_channel); // Replace this with WRITE_LONG when required
+			WRITE_STRING(_sample);
+			WRITE_LONG(ftol_asm(_volume));
+			WRITE_LONG(ftol_asm(_attenuation));
+			WRITE_LONG(_flags);
+			WRITE_LONG(_pitch);
+		MESSAGE_END();
+#endif
+	}
 
 #if defined(CLIENT_DLL) && defined(CL_ENGFUNCS_DEF)
 	inline void PauseMenu()
@@ -404,6 +434,12 @@ namespace FranUtils
 	{
 		gHUD.m_clImgui.FinishExtension();
 		gEngfuncs.pfnClientCmd("quit");
+	}
+	// USE AS A LAST RESORT
+	inline void ForceShutdown()
+	{
+		// DODGE THIS, ENGINE!!
+		//PostQuitMessage(0);
 	}
 	inline void RestartGame()
 	{
@@ -501,7 +537,7 @@ namespace FranUtils
 		}
 
 	public:
-		inline static int isPaused; // Is client paused the game?
+		inline static bool isPaused; // Is client paused the game?
 		inline static float isPausedLastUpdate;
 		inline static bool inMainMenu; // Is client in main menu? (Not pause menu)
 		inline static bool in3DMainMenu; // Is client in 3D main menu?

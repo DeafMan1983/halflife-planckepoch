@@ -33,6 +33,9 @@
 #define FRANUTILS_MODDIR 1 // For usage of mod directory utilites
 #include "FranUtils.hpp"
 
+#include "FranAudio/FranAudio.hpp"
+#include "FranAudio/Channel.hpp"
+
 SDL_Window* mainWindow;
 SDL_GLContext mainContext;
 
@@ -50,6 +53,15 @@ void ClientImGui_HookedDraw()
 	else if (!FranUtils::Globals::inMainMenu)
 	{
 		FranUtils::Globals::called3DMainMenu = false;
+	}
+
+
+	for (auto& channel : FranAudio::Channel::channelsVec)
+	{
+		for (auto& sound : channel.sounds)
+		{
+			sound.SetPaused(FranUtils::Globals::isPaused, true);
+		}
 	}
 
 	mainImgui->DrawImgui();

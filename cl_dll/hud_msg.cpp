@@ -22,6 +22,8 @@
 #include "r_efx.h"
 #include "rain.h"
 
+#include "FranAudio/FranAudio.hpp"
+
 //RENDERERS START
 #include "bsprenderer.h"
 #include "propmanager.h"
@@ -381,4 +383,20 @@ int CHud::MsgFunc_WpnSkn(const char* pszName, int iSize, void* pbuf)
 
 	return 1;
 }
+
+int CHud::MsgFunc_CreateSound(const char* pszName, int iSize, void* pbuf)
+{
+	BEGIN_READ(pbuf, iSize);
+		short _entindex = READ_SHORT(); // (_entity)->entindex()
+		short _channel = READ_SHORT();	// Replace this with READ_LONG when required
+		char* _sample = READ_STRING();
+		float _volume = READ_FLOAT();	   // FTOL
+		float _attenuation = READ_FLOAT(); // FTOL
+		int _flags = READ_LONG();
+		int _pitch = READ_LONG();
+
+	FranAudio::EmitSound(_entindex, _channel, _sample, _volume, _attenuation, _flags, _pitch);
+	return 1;
+}
+
 //RENDERERS END

@@ -43,9 +43,6 @@ void LinkUserMessages()
 	gmsgResetHUD = REG_USER_MSG("ResetHUD", 1); // called every respawn
 	gmsgInitHUD = REG_USER_MSG("InitHUD", 0);	// called every time a new player joins the server
 
-	gmsgKeyedDLight = REG_USER_MSG("KeyedDLight", -1);	//LRC
-	gmsgKeyedELight = REG_USER_MSG("KeyedELight", -1);	//LRC
-	gmsgSetSky = REG_USER_MSG("SetSky", 8);			//LRC
 	gmsgHUDColor = REG_USER_MSG("HUDColor", 4);		//LRC
 	gmsgClampView = REG_USER_MSG("ClampView", 10);	//LRC 1.8
 
@@ -73,7 +70,6 @@ void LinkUserMessages()
 	gmsgStatusValue = REG_USER_MSG("StatusValue", 3);
 	gmsgCamData = REG_USER_MSG("CamData", -1);
 	gmsgPlayMP3 = REG_USER_MSG("PlayMP3", -1); //Killar
-	gmsgRainData = REG_USER_MSG("RainData", 16);
 	gmsgInventory = REG_USER_MSG("Inventory", -1); //AJH Inventory system
 	gmsgWeapons = REG_USER_MSG("Weapons", 8);
 	
@@ -90,4 +86,6 @@ void LinkUserMessages()
 	gmsgPPGray = REG_USER_MSG("PPGray", -1);
 	gmsgViewmodelSkin = REG_USER_MSG("WpnSkn", -1);
 	//RENDERERS END
+
+	gmsgCreateSound = REG_USER_MSG("CreateSound", -1);
 }

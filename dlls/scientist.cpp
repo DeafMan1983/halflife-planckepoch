@@ -26,6 +26,7 @@
 #include "scripted.h"
 #include "animation.h"
 #include "soundent.h"
+#include "FranUtils.hpp"
 
 
 #define NUM_SCIENTIST_HEADS 4 // four heads available for scientist model

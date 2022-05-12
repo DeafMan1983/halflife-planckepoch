@@ -15,12 +15,18 @@
 //
 // hud_redraw.cpp
 //
+
 #include "hud.h"
 #include "cl_util.h"
 
 #include "vgui_TeamFortressViewport.h"
 
 #include "postprocess.h"
+
+#include "FranUtils.hpp"
+
+#include "FranAudio/FranAudio.hpp"
+#include "FranAudio/Channel.hpp"
 
 #define MAX_LOGO_FRAMES 56
 
@@ -30,7 +36,7 @@ int grgLogoFrame[MAX_LOGO_FRAMES] =
 		16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
 		29, 29, 29, 29, 29, 28, 27, 26, 25, 24, 30, 31};
 
-inline float UTIL_Lerp(float lerpfactor, float A, float B) { return A + lerpfactor * (B - A); }
+//inline float UTIL_Lerp(float lerpfactor, float A, float B) { return A + lerpfactor * (B - A); }
 
 extern bool g_iVisibleMouse;
 
@@ -99,6 +105,26 @@ bool CHud::Redraw(float flTime, bool intermission)
 	//RENDERERS START
 	gPostProcess.ApplyPostEffects(); //PostProcessing
 	//RENDERERS END
+	
+	Vector forward, right, up;
+
+	gEngfuncs.pfnAngleVectors(gEngfuncs.GetLocalPlayer()->angles, forward, right, up);
+
+	FranAudio::SetListenerTransform(gEngfuncs.GetLocalPlayer()->origin, up, forward);
+
+	
+	for (auto& channel : FranAudio::Channel::channelsVec)
+	{
+		for (auto& sound : channel.sounds)
+		{
+			sound.Update(gEngfuncs.GetEntityByIndex(sound.EntIndex()));
+			// Moved to imgui hookeddraw
+			//sound.SetPaused(FranUtils::Globals::isPaused, true);
+		}
+	}
+
+	FranAudio::RefreshSoundPositions();
+	
 
 	m_fOldTime = m_flTime;	// save time of previous redraw
 	m_flTime = flTime;

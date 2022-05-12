@@ -24,6 +24,7 @@
 #include "talkmonster.h"
 #include "gamerules.h"
 #include "locus.h"
+#include "FranUtils.hpp"
 
 static char* memfgets(byte* pMemFile, int fileSize, int& filePos, char* pBuffer, int bufferSize);
 
@@ -1660,6 +1661,7 @@ int SENTENCEG_Lookup(const char* sample, char* sentencenum)
 void EMIT_SOUND_DYN(edict_t* entity, int channel, const char* sample, float volume, float attenuation,
 	int flags, int pitch)
 {
+	/*
 	if (sample && *sample == '!')
 	{
 		char name[32];
@@ -1670,6 +1672,8 @@ void EMIT_SOUND_DYN(edict_t* entity, int channel, const char* sample, float volu
 	}
 	else
 		EMIT_SOUND_DYN2(entity, channel, sample, volume, attenuation, flags, pitch);
+	*/
+	FranUtils::EmitSound(CBaseEntity::Instance(entity)->pev, channel, sample, volume, attenuation, flags, pitch);
 }
 
 // play a specific sentence over the HEV suit speaker - just pass player entity, and !sentencename
