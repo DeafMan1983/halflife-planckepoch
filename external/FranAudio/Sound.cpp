@@ -121,19 +121,19 @@ void FRANAUDIO_API FranAudio::Sound::SetPaused(bool _pause, bool isMenu)
 	}
 }
 
-void FRANAUDIO_API FranAudio::Sound::SetVolume(float _volume)
+void FranAudio::Sound::SetVolume(float _volume)
 {
 	volume = _volume;
 	FranAudio_AlFunction(alSourcef, sourceHandle, AL_GAIN, _volume);
 }
 
-void FRANAUDIO_API FranAudio::Sound::SetPitch(float _pitch)
+void FranAudio::Sound::SetPitch(float _pitch)
 {
 	pitch = _pitch;
 	FranAudio_AlFunction(alSourcef, sourceHandle, AL_PITCH, _pitch / 100);
 }
 
-const char* FRANAUDIO_API FranAudio::Sound::GetDir()
+const char* FranAudio::Sound::GetDir()
 {
 	return sampleDir.c_str();
 }
