@@ -43,6 +43,10 @@
 #include "pm_structs.h"
 
 #ifdef CLIENT_DLL
+#include "FranAudio/FranAudio.hpp"
+#endif // CLIENT_DLL
+
+#ifdef CLIENT_DLL
 #include "cl_dll.h"
 #include "cdll_int.h"
 extern cl_enginefunc_t gEngfuncs;
@@ -172,6 +176,13 @@ std::map<StepSpecialType, stepType_s> g_SpecialStepMap;
 
 //Contains Texture impact types
 std::vector<impactGroupType_s> g_texTypeImpactTypeVector;
+
+void PM_EmitSound(int channel, const char* sample, float volume, float attenuation, int fFlags, int pitch)
+{
+#ifdef CLIENT_DLL
+	FranAudio::EmitSound(pmove->player_index + 1, CHAN_BODY, sample, volume * 0.8 /*Footsteps are a bit quiet*/, attenuation, fFlags, pitch);
+#endif // CLIENT_DLL
+}
 
 /*FORCEINLINE textureType_s& CTextureAndTypesMap::operator[](std::string str)
 {
@@ -865,11 +876,11 @@ void PM_PlayGroupSound( const char* szValue, int irand, float fvol )
 			case 3: szBuf[i] = '4'; break;
 			default: szBuf[i] = '#';
 			}
-			pmove->PM_PlaySound(CHAN_BODY, szBuf, fvol, ATTN_NORM, 0, PITCH_NORM);
+			PM_EmitSound(CHAN_BODY, szBuf, fvol, ATTN_NORM, 0, PITCH_NORM);
 			return;
 		}
 	}
-	pmove->PM_PlaySound(CHAN_BODY, szValue, fvol, ATTN_NORM, 0, PITCH_NORM);
+	PM_EmitSound(CHAN_BODY, szValue, fvol, ATTN_NORM, 0, PITCH_NORM);
 }
 
 void PM_PlayStepSound(stepType_s step, float fvol)
@@ -929,9 +940,9 @@ void PM_PlayStepSound(stepType_s step, float fvol)
 			if (irand > (int)stepValue.stepSounds.size() - 1) irand -= 2;
 
 
-		pmove->PM_PlaySound(CHAN_BODY, stepValue.stepSounds[irand].c_str(), fvol, ATTN_NORM, 0, PITCH_NORM);
+		PM_EmitSound(CHAN_BODY, stepValue.stepSounds[irand].c_str(), fvol, ATTN_NORM, 0, PITCH_NORM);
 		 
-		//pmove->PM_PlaySound(CHAN_BODY, "player/pl_step1.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
+		//PM_EmitSound(CHAN_BODY, "player/pl_step1.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
 	//}
 	//}
 
@@ -2965,7 +2976,7 @@ void PM_Jump()
 
 			int rnd = pmove->RandomLong(0, sSounds.stepSounds.size() - 1);
 
-			pmove->PM_PlaySound(CHAN_BODY, sSounds.stepSounds[rnd].c_str(), 1, ATTN_NORM, 0, PITCH_NORM);
+			PM_EmitSound(CHAN_BODY, sSounds.stepSounds[rnd].c_str(), 1, ATTN_NORM, 0, PITCH_NORM);
 		}
 
 		return;
@@ -2991,7 +3002,7 @@ void PM_Jump()
 
 	if (tfc)
 	{
-		pmove->PM_PlaySound(CHAN_BODY, "player/plyrjmp8.wav", 0.5, ATTN_NORM, 0, PITCH_NORM);
+		PM_EmitSound(CHAN_BODY, "player/plyrjmp8.wav", 0.5, ATTN_NORM, 0, PITCH_NORM);
 	}
 	else
 	{
@@ -3126,10 +3137,10 @@ void PM_CheckFalling()
 			//switch ( RandomLong(0,1) )
 			//{
 			//case 0:
-			//pmove->PM_PlaySound( CHAN_VOICE, "player/pl_fallpain2.wav", 1, ATTN_NORM, 0, PITCH_NORM );
+			//PM_EmitSound( CHAN_VOICE, "player/pl_fallpain2.wav", 1, ATTN_NORM, 0, PITCH_NORM );
 			//break;
 			//case 1:
-			pmove->PM_PlaySound(CHAN_VOICE, "player/pl_fallpain3.wav", 1, ATTN_NORM, 0, PITCH_NORM);
+			PM_EmitSound(CHAN_VOICE, "player/pl_fallpain3.wav", 1, ATTN_NORM, 0, PITCH_NORM);
 			//	break;
 			//}
 			fvol = 1.0;
@@ -3140,7 +3151,7 @@ void PM_CheckFalling()
 
 			if (tfc)
 			{
-				pmove->PM_PlaySound(CHAN_VOICE, "player/pl_fallpain3.wav", 1, ATTN_NORM, 0, PITCH_NORM);
+				PM_EmitSound(CHAN_VOICE, "player/pl_fallpain3.wav", 1, ATTN_NORM, 0, PITCH_NORM);
 			}
 
 			fvol = 0.85;
@@ -3192,7 +3203,7 @@ void PM_PlayWaterSounds()
 
 		int rnd = pmove->RandomLong(0, sSounds.stepSounds.size() - 1);
 
-		pmove->PM_PlaySound(CHAN_BODY, sSounds.stepSounds[rnd].c_str(), 1, ATTN_NORM, 0, PITCH_NORM);
+		PM_EmitSound(CHAN_BODY, sSounds.stepSounds[rnd].c_str(), 1, ATTN_NORM, 0, PITCH_NORM);
 
 	}
 }

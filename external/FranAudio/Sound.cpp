@@ -9,12 +9,13 @@
 
 FranAudio::Sound::Sound()
 	: entity(INT32_MAX),
-	  channelType(ChannelType::Auto),
-	  sampleDir("ERR"),
-	  volume(0),
-	  attenuation(0),
-	  flags(0),
-	  pitch(0)
+	channelType(ChannelType::Auto),
+	sampleDir("ERR"),
+	volume(0),
+	attenuation(0),
+	flags(0),
+	pitch(0),
+	firstUpdate(true)
 {
 
 }
@@ -26,7 +27,8 @@ FranAudio::Sound::Sound(int _entityIndex, int _channel, const char* _sample, flo
 	volume(_volume), 
 	attenuation(_attenuation), 
 	flags(_flags), 
-	pitch(_pitch)
+	pitch(_pitch),
+	firstUpdate(true)
 {
 
 	if (sampleDir == "ERR")
@@ -96,6 +98,13 @@ void FRANAUDIO_API FranAudio::Sound::Update(cl_entity_t* _ent)
 		return;
 	}
 
+	if (firstUpdate)
+	{
+		firstUpdate = false;
+
+		if (_ent->player)
+			FranAudio_AlFunction(alSourcef, sourceHandle, AL_GAIN, 0.01f);
+	}
 
 	FranAudio_AlFunction(alGetSourcei, sourceHandle, AL_SOURCE_STATE, &sourceState);
 

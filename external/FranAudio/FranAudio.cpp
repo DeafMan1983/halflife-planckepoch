@@ -63,7 +63,7 @@ void FranAudio::Globals::Init(const char* sndDir, const char* fallbackSndDir)
 		LogMessage("ERR: OpenAL init - context applying error!!");
 	}
 
-	FranAudio_AlFunction(alListenerf, AL_GAIN, 1.0f);
+	FranAudio_AlFunction(alListenerf, AL_GAIN, 100.0f);
 
 	Refresh();
 }

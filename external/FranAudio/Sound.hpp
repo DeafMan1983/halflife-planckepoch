@@ -51,6 +51,8 @@ namespace FranAudio
 
 		bool isPausedByPauseMenu;
 
+		bool firstUpdate; // Will update for the first time?
+
 	public:
 		Sound();
 
