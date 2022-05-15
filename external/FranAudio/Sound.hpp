@@ -71,6 +71,12 @@ namespace FranAudio
 
 		void FRANAUDIO_API SetPaused(bool _pause, bool isMenu = false);
 
+		void FRANAUDIO_API SetVolume(float _volume);
+
+		void FRANAUDIO_API SetPitch(float _pitch);
+
+		const char* FRANAUDIO_API GetDir();
+
 		void Kill();
 
 		// Entity index of owner

@@ -17,6 +17,7 @@
 #include "cl_entity.h"
 
 #include "FranAudio/ALWrappers.hpp"
+#include "FranAudio/Utilities.hpp"
 
 /*
 // Reserved for initialisation
@@ -62,7 +63,7 @@ void FranAudio::Globals::Init(const char* sndDir, const char* fallbackSndDir)
 		LogMessage("ERR: OpenAL init - context applying error!!");
 	}
 
-	FranAudio_AlFunction(alListenerf, AL_GAIN, 100.0f);
+	FranAudio_AlFunction(alListenerf, AL_GAIN, 1.0f);
 
 	Refresh();
 }
@@ -120,6 +121,25 @@ ALCcontext* FranAudio::Globals::GetContext()
 
 void FRANAUDIO_API FranAudio::EmitSound(int _entityIndex, int _channel, const char* _sample, float _volume, float _attenuation, int _flags, int _pitch)
 {
+	if (_flags != 0)
+	{
+		auto tempdir = FranAudio::Utilities::ReturnPlayableDir(_sample);
+		for (auto& sound : FranAudio::Sound::SoundsVector)
+		{
+			if (tempdir == sound.GetDir() && _entityIndex == sound.EntIndex())
+			{
+			
+				if (_flags & SND_STOP)
+					sound.Kill();
+				if (_flags & SND_CHANGE_VOL)
+					sound.SetVolume(_volume);
+				if (_flags & SND_CHANGE_PITCH)
+					sound.SetPitch(_pitch);
+			}
+		}
+		return;
+	}
+
 	FranAudio::Sound::SoundsVector.Append(Sound(_entityIndex, _channel, _sample, _volume, _attenuation, _flags, _pitch));
 }
 

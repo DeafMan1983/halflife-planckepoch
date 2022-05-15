@@ -96,6 +96,7 @@ void FRANAUDIO_API FranAudio::Sound::Update(cl_entity_t* _ent)
 		return;
 	}
 
+
 	FranAudio_AlFunction(alGetSourcei, sourceHandle, AL_SOURCE_STATE, &sourceState);
 
 	FranAudio_AlFunction(alSourcefv, sourceHandle, AL_POSITION, _ent->origin);
@@ -120,6 +121,23 @@ void FRANAUDIO_API FranAudio::Sound::SetPaused(bool _pause, bool isMenu)
 	}
 }
 
+void FRANAUDIO_API FranAudio::Sound::SetVolume(float _volume)
+{
+	volume = _volume;
+	FranAudio_AlFunction(alSourcef, sourceHandle, AL_GAIN, _volume);
+}
+
+void FRANAUDIO_API FranAudio::Sound::SetPitch(float _pitch)
+{
+	_pitch = pitch;
+	FranAudio_AlFunction(alSourcef, sourceHandle, AL_PITCH, _pitch / 100);
+}
+
+const char* FRANAUDIO_API FranAudio::Sound::GetDir()
+{
+	return sampleDir.c_str();
+}
+
 void FranAudio::Sound::Kill()
 {
 	if (sampleDir == "ERR")
@@ -127,7 +145,7 @@ void FranAudio::Sound::Kill()
 		FranAudio::Sound::SoundsVector.PopIndex(FranAudio::Sound::SoundsVector.Find(*this));
 		return;
 	}
-
+	FranAudio_AlFunction(alSourceStop, sourceHandle);
 	FranAudio_AlFunction(alDeleteSources, 1, &sourceHandle);
 	FranAudio_AlFunction(alDeleteBuffers, 1, &sourceBuffer);
 
