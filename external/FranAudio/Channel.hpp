@@ -24,15 +24,4 @@ namespace FranAudio
 		NetworkVoiceEnd = CHAN_NETWORKVOICE_END,
 		Bot = CHAN_BOT,
 	};
-
-	class FRANAUDIO_API Channel
-	{
-	public:
-		Channel();
-
-		FranVector<Sound> sounds;
-
-		// All possible channels are here. 
-		inline static FranVector<Channel> channelsVec;
-	};
 };

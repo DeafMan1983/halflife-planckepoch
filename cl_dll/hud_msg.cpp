@@ -23,6 +23,7 @@
 #include "rain.h"
 
 #include "FranAudio/FranAudio.hpp"
+#include "FranAudio/Sound.hpp"
 
 //RENDERERS START
 #include "bsprenderer.h"

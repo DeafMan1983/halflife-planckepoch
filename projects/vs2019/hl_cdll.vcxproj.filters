@@ -70,6 +70,9 @@
     <Filter Include="Header Files\cl_dll\imgui">
       <UniqueIdentifier>{666b71c4-fe16-4ef7-b3eb-681b51b3ea79}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\engine">
+      <UniqueIdentifier>{3f66ed51-e539-4697-95b8-175d9a62e49b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\dlls\crossbow.cpp">

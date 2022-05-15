@@ -16,6 +16,8 @@
 
 #include "cl_entity.h"
 
+#include "FranAudio/ALWrappers.hpp"
+
 /*
 // Reserved for initialisation
 BOOL APIENTRY DllMain(HMODULE hModule,
@@ -34,12 +36,6 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 }
 */
 
-// =============
-// Globals
-// =============
-
-//FranAudio::Channel FranAudio::Globals::channelsArray[MAX_CHANNELS] = {};
-
 float orientation_vec[6] = {}; // This will be storing forward then up vectors
 
 void FranAudio::Globals::Init(const char* sndDir, const char* fallbackSndDir)
@@ -49,35 +45,52 @@ void FranAudio::Globals::Init(const char* sndDir, const char* fallbackSndDir)
 
 	logFile.open(std::string(LOG_DIR) + "FranAudioLog.txt");
 
-	//gSoloud = SoloudContext{};
-	gSoloud.init(SoLoud::Soloud::CLIP_ROUNDOFF /* | SoLoud::Soloud::ENABLE_VISUALIZATION*/);
-	gSoloud.setGlobalVolume(4);
+	openALDevice = alcOpenDevice(nullptr);
+	if (!openALDevice)
+	{
+		LogMessage("ERR: OpenAL init - device error!!");
+	}
+
+	if (!FranAudio_AlcFunction(alcCreateContext, mainContext, openALDevice, openALDevice, nullptr) || !mainContext)
+	{
+		LogMessage("ERR: OpenAL init - context error!!");
+	}
+
+	ALCboolean contextMadeCurrent = false;
+	if (!FranAudio_AlcFunction(alcMakeContextCurrent, contextMadeCurrent, openALDevice, mainContext) || contextMadeCurrent != ALC_TRUE)
+	{
+		LogMessage("ERR: OpenAL init - context applying error!!");
+	}
+
+	FranAudio_AlFunction(alListenerf, AL_GAIN, 100.0f);
 
 	Refresh();
 }
 
 void FranAudio::Globals::Refresh()
 {
-	FranAudio::Channel::channelsVec.Clear();
-
-	for (int i = 0; i < MIN_CHANNELS; i++)
-	{
-		FranAudio::Channel::channelsVec.Append(Channel());
-	}
-
+	FranAudio::Sound::SoundsVector.Clear();
 }
 
 void FranAudio::Globals::Shutdown()
 {
 	// Stop All Sounds in All Channels
-	for (auto& channel : FranAudio::Channel::channelsVec)
+	for (auto& sound : FranAudio::Sound::SoundsVector)
 	{
-		for (auto& sound : channel.sounds)
-		{
-			sound.Kill();
-		}
+		sound.Kill();
 	}
 
+	//for (auto& [dir, sound] : FranAudio::Sound::SoundsMap)
+	//{
+		//SDL_FREESOUND HERE MAYBE IDK
+	//}
+
+	ALCboolean closedt, contextt = false;
+
+	FranAudio_AlcFunction(alcMakeContextCurrent, contextt, openALDevice, nullptr);
+	FranAudio_AlcFunction(alcDestroyContext, openALDevice, mainContext);
+
+	FranAudio_AlcFunction(alcCloseDevice, closedt, openALDevice, openALDevice);
 }
 
 const char* FranAudio::Globals::GetModSoundDir()
@@ -95,9 +108,9 @@ void FranAudio::Globals::LogMessage(const char* message)
 	logFile << ">>> " << message << std::endl;
 }
 
-FranAudio::SoloudContext& FranAudio::Globals::GetContext()
+ALCcontext* FranAudio::Globals::GetContext()
 {
-	return FranAudio::Globals::gSoloud;
+	return FranAudio::Globals::mainContext;
 }
 
 
@@ -107,29 +120,23 @@ FranAudio::SoloudContext& FranAudio::Globals::GetContext()
 
 void FRANAUDIO_API FranAudio::EmitSound(int _entityIndex, int _channel, const char* _sample, float _volume, float _attenuation, int _flags, int _pitch)
 {
-	FranAudio::Channel::channelsVec[_channel].sounds.Append(Sound(_entityIndex, _channel, _sample, _volume, _attenuation, _flags, _pitch));
+	FranAudio::Sound::SoundsVector.Append(Sound(_entityIndex, _channel, _sample, _volume, _attenuation, _flags, _pitch));
 }
 
 void FRANAUDIO_API FranAudio::SetListenerTransform(Vector position, Vector up, Vector forward)
 {
-	FranAudio::Globals::GetContext().set3dListenerParameters(position[0], position[1], position[2], forward[0], forward[1], forward[2], up[0], up[1], up[2]);
-}
+	FranAudio_AlFunction(alListenerfv, AL_POSITION, position);
 
-void FRANAUDIO_API FranAudio::RefreshSoundPositions()
-{
-	FranAudio::Globals::GetContext().update3dAudio();
+	orientation_vec[0] = forward.x;
+	orientation_vec[1] = forward.y;
+	orientation_vec[2] = forward.z;
+	orientation_vec[3] = up.x;
+	orientation_vec[4] = up.y;
+	orientation_vec[5] = up.z;
+
+	FranAudio_AlFunction(alListenerfv, AL_ORIENTATION, orientation_vec);
 }
 
 // =============
 // General Utilities
 // =============
-
-void FranAudio::PlaySample(SoloudSound* _snd, Vector _initialPos)
-{
-	FranAudio::Globals::GetContext().play3d(*_snd, _initialPos[0], _initialPos[1], _initialPos[2]);
-}
-
-void FranAudio::SetSoundPosition(SoloudSoundHandle _snd, Vector _pos)
-{
-	FranAudio::Globals::GetContext().set3dSourcePosition(_snd, _pos[0], _pos[1], _pos[2]);
-}

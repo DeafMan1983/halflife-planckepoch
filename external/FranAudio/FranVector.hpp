@@ -3,14 +3,13 @@
 
 #include <stdexcept>
 
-#include "FranAudioAPI.hpp"
-
-namespace FranAudio
+namespace FranUtils
 {
 
 	// A Generic "Dynamic Array" container, similar to std::vector
+	// The class is exportable to dlls, so you can easily use a dllexport macro
 	template <class _T>
-	class FRANAUDIO_API FranVector
+	class FranVector
 	{
 	private:
 		_T* baseArrayData;
@@ -46,27 +45,43 @@ namespace FranAudio
 
 		// Add an element at the end of the Vector
 		void Append(const _T& _objToAppend);
+
+		// Add an element at a position into the Vector
+		// Resize if the index is greater than size.
+		void Insert(const _T& _objToInsert, size_t _position);
+
 		// Remove an element at the end of the Vector
 		void Pop() { PopIndex(baseArraySize - 1); };
+
 		// Remove an element of the Vector
 		void PopIndex(size_t _index);
+
 		// Find element. Returns SIZE_MAX if not found
 		size_t Find(const _T& _objToAppend);
+
+		// Size of the vector AKA. Number of elements.
+		size_t Size();
+
+		// Resize the Vector
+		// Removes elements from the end if new size is less than current size.
+		// Adds elements with default constructor if new size is greater that current size.
+		void Resize(size_t _newSize);
+
 		// Clear the Vector
 		void Clear();
 
 		bool IsEmpty() const;
 
 		// ==========
-		// STL Vector Compatibility
+		// STL Vector Compatibility. Not Finished yet.
 		// ==========
 #ifdef FRANVECTOR_STL_COMP
 		void push_back(const _T& _objToAppend) { Append(_objToAppend); };
-		void emplace_back(const _T& _objToAppend) { Append(_objToAppend); };
+		//void emplace_back(const _T& _objToAppend) { Append(_objToAppend); };
 
 		_T& at(size_t _index) const { return operator[](_index); };
 		_T& front() const { return operator[](0); };
-		_T& back() const { return operator[](baseArraySize-1); };
+		_T& back() const { return operator[](baseArraySize - 1); };
 
 		bool empty() const { return IsEmpty(); };
 #endif
@@ -77,7 +92,7 @@ namespace FranAudio
 	// ==========
 
 	template <class _T>
-	bool operator==(const FranVector<_T>& _a, const FranVector<_T>& _b) 
+	bool operator==(const FranVector<_T>& _a, const FranVector<_T>& _b)
 	{
 		return (_a == _b);
 	}
@@ -100,21 +115,21 @@ namespace FranAudio
 
 };
 
-#ifdef FRANAUDIO_DYNAMIC
+#ifdef FRANUTILS_DYNAMIC
 
 // =========
 // Definitions
 // =========
 
 template <class _T>
-FranAudio::FranVector<_T>::FranVector()
+FranUtils::FranVector<_T>::FranVector()
 {
 	baseArraySize = 0;
 	baseArrayData = nullptr;
 }
 
 template <class _T>
-FranAudio::FranVector<_T>::FranVector(const FranVector& _other)
+FranUtils::FranVector<_T>::FranVector(const FranVector& _other)
 {
 	baseArraySize = 0;
 
@@ -123,13 +138,13 @@ FranAudio::FranVector<_T>::FranVector(const FranVector& _other)
 }
 
 template<class _T>
-FranAudio::FranVector<_T>::~FranVector()
+FranUtils::FranVector<_T>::~FranVector()
 {
 	delete[] baseArrayData;
 }
 
 template <class _T>
-_T& FranAudio::FranVector<_T>::operator[](size_t _index) const
+_T& FranUtils::FranVector<_T>::operator[](size_t _index) const
 {
 	if (_index >= baseArraySize)
 		throw std::out_of_range("Subscript: Out Of Range!!");
@@ -138,16 +153,17 @@ _T& FranAudio::FranVector<_T>::operator[](size_t _index) const
 }
 
 template <class _T>
-void FranAudio::FranVector<_T>::operator=(const FranVector<_T>& _other)
+void FranUtils::FranVector<_T>::operator=(const FranVector<_T>& _other)
 {
 	Clear();
 
+	// TODO: Optimise
 	for (size_t i = 0; i < _other.baseArraySize; ++i)
 		Append(_other.baseArrayData[i]);
 }
 
 template<class _T>
-bool FranAudio::FranVector<_T>::operator==(const FranVector<_T>& _other)
+bool FranUtils::FranVector<_T>::operator==(const FranVector<_T>& _other)
 {
 	if (baseArraySize != _other.baseArraySize)
 		return false;
@@ -160,9 +176,9 @@ bool FranAudio::FranVector<_T>::operator==(const FranVector<_T>& _other)
 }
 
 template <class _T>
-void FranAudio::FranVector<_T>::Append(const _T& _objToAppend)
+void FranUtils::FranVector<_T>::Append(const _T& _objToAppend)
 {
-	_T* tempArray = new _T[baseArraySize + 1];
+	_T* tempArray = new _T[baseArraySize + 1]();
 
 	// Copy old data into the new array
 	for (size_t i = 0; i < baseArraySize; ++i)
@@ -177,10 +193,39 @@ void FranAudio::FranVector<_T>::Append(const _T& _objToAppend)
 	baseArrayData = tempArray;
 }
 
-template <class _T>
-void FranAudio::FranVector<_T>::PopIndex(size_t _index)
+template<class _T>
+inline void FranUtils::FranVector<_T>::Insert(const _T& _objToInsert, size_t _position)
 {
-	if (baseArraySize > 0 || _index >= baseArraySize)
+	if (_position > baseArraySize)
+	{
+		Resize(_position + 1);
+		baseArrayData[_position] = _objToInsert;
+		return;
+	}
+
+	_T* tempArray = new _T[baseArraySize + 1]();
+
+	// Copy old data into the new array
+	for (size_t i = 0; i < baseArraySize + 1; ++i)
+		if (i >= _position)
+			tempArray[i + 1] = baseArrayData[i];
+		else
+			tempArray[i] = baseArrayData[i];
+
+	// Add the last object, then increment base array size
+	tempArray[_position] = _objToInsert;
+	baseArraySize++;
+
+	// Remove old data
+	delete[] baseArrayData;
+
+	baseArrayData = tempArray;
+}
+
+template <class _T>
+void FranUtils::FranVector<_T>::PopIndex(size_t _index)
+{
+	if (baseArraySize < 1 || _index >= baseArraySize)
 		throw std::out_of_range("PopIndex: Out Of Range!!");
 
 	_T* tempArray = new _T[baseArraySize - 1];
@@ -202,7 +247,7 @@ void FranAudio::FranVector<_T>::PopIndex(size_t _index)
 }
 
 template <class _T>
-size_t FranAudio::FranVector<_T>::Find(const _T& _objToAppend)
+size_t FranUtils::FranVector<_T>::Find(const _T& _objToAppend)
 {
 	for (size_t i = 0; i < baseArraySize; ++i)
 	{
@@ -212,11 +257,34 @@ size_t FranAudio::FranVector<_T>::Find(const _T& _objToAppend)
 	return SIZE_MAX;
 }
 
+template<class _T>
+inline size_t FranUtils::FranVector<_T>::Size()
+{
+	return baseArraySize;
+}
+
+template<class _T>
+inline void FranUtils::FranVector<_T>::Resize(size_t _newSize)
+{
+	_T* tempArray = new _T[_newSize]();
+
+	// Copy old data into the new array
+	for (size_t i = 0; i < std::min(_newSize, baseArraySize); ++i)
+		tempArray[i] = baseArrayData[i];
+
+	baseArraySize = _newSize;
+
+	// Remove old data
+	delete[] baseArrayData;
+
+	baseArrayData = tempArray;
+}
+
 template <class _T>
-void FranAudio::FranVector<_T>::Clear()
+void FranUtils::FranVector<_T>::Clear()
 {
 	// Remove old data
-	if(baseArrayData)
+	if (baseArrayData)
 	{
 		delete[] baseArrayData;
 		baseArrayData = nullptr;
@@ -226,7 +294,7 @@ void FranAudio::FranVector<_T>::Clear()
 }
 
 template<class _T>
-bool FranAudio::FranVector<_T>::IsEmpty() const
+bool FranUtils::FranVector<_T>::IsEmpty() const
 {
 	return baseArraySize == 0;
 }

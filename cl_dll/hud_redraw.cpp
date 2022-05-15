@@ -112,19 +112,12 @@ bool CHud::Redraw(float flTime, bool intermission)
 
 	FranAudio::SetListenerTransform(gEngfuncs.GetLocalPlayer()->origin, up, forward);
 
-	
-	for (auto& channel : FranAudio::Channel::channelsVec)
+	for (auto& sound : FranAudio::Sound::SoundsVector)
 	{
-		for (auto& sound : channel.sounds)
-		{
-			sound.Update(gEngfuncs.GetEntityByIndex(sound.EntIndex()));
-			// Moved to imgui hookeddraw
-			//sound.SetPaused(FranUtils::Globals::isPaused, true);
-		}
+		sound.Update(gEngfuncs.GetEntityByIndex(sound.EntIndex()));
+		// Moved to imgui hookeddraw
+		//sound.SetPaused(FranUtils::Globals::isPaused, true);
 	}
-
-	FranAudio::RefreshSoundPositions();
-	
 
 	m_fOldTime = m_flTime;	// save time of previous redraw
 	m_flTime = flTime;

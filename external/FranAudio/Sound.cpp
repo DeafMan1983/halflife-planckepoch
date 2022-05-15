@@ -5,6 +5,7 @@
 #include "Sound.hpp"
 
 #include "Utilities.hpp"
+#include "ALWrappers.hpp"
 
 FranAudio::Sound::Sound()
 	: entity(INT32_MAX),
@@ -28,30 +29,36 @@ FranAudio::Sound::Sound(int _entityIndex, int _channel, const char* _sample, flo
 	pitch(_pitch)
 {
 
-
 	if (sampleDir == "ERR")
 		return;
 
-	if (sampleData.load(sampleDir.c_str()) == SoLoud::SO_NO_ERROR)
+	PrecacheSound(sampleDir);
+
+	auto& sound = FindPrecachedSound(sampleDir);
+
+	if (sound.data == nullptr)
 	{
 		// Load unsuccessful
 		sampleDir = "ERR";
 		return;
 	}
 
-	sampleData.setLooping(1);
-	sampleData.set3dMinMaxDistance(1, 200);
-	sampleData.set3dAttenuation(SoLoud::AudioSource::EXPONENTIAL_DISTANCE, 0.5);
+	FranAudio_AlFunction(alGenBuffers, 1, &sourceBuffer);
+	FranAudio_AlFunction(alBufferData, sourceBuffer, sound.format, sound.data, sound.length, sound.info.freq);
 
-	sampleHandle = FranAudio::Globals::GetContext().play3d(sampleData, 100, 0, 0);
+	FranAudio_AlFunction(alGenSources, 1, &sourceHandle);
+	FranAudio_AlFunction(alSourcef, sourceHandle, AL_PITCH, 1);
+	FranAudio_AlFunction(alSourcef, sourceHandle, AL_GAIN, 1.0f);
+	FranAudio_AlFunction(alSourcefv, sourceHandle, AL_POSITION, Vector{0, 0, 0});
+	FranAudio_AlFunction(alSourcefv, sourceHandle, AL_VELOCITY, Vector{0, 0, 0});
+	FranAudio_AlFunction(alSourcei, sourceHandle, AL_LOOPING, AL_FALSE);
+	FranAudio_AlFunction(alSourcei, sourceHandle, AL_BUFFER, sourceBuffer);
 
-	FranAudio::Globals::LogMessage(std::string("Sample Loaded. Length : ").c_str());
+	FranAudio_AlFunction(alSourcePlay, sourceHandle);
 
-	//if (!audioSource)
-	{
-		Kill();
-		return;
-	}
+	sourceState = AL_PLAYING;
+
+	FranAudio::Globals::LogMessage(std::string(std::string("Sample ") + "\"" + sampleDir.c_str() + "\"" + " playing.").c_str());
 
 }
 
@@ -83,14 +90,16 @@ bool FranAudio::Sound::operator==(const Sound& _other)
 
 void FRANAUDIO_API FranAudio::Sound::Update(cl_entity_t* _ent)
 {
-	if (sampleDir == "ERR" || _ent == nullptr /* || !audioSource || audioSource.isPending()*/)
+	if (sampleDir == "ERR" || _ent == nullptr || sourceState == AL_STOPPED /* || !audioSource || audioSource.isPending()*/)
 	{
-	//	Kill();
+		Kill();
 		return;
 	}
 
-	FranAudio::SetSoundPosition(sampleHandle, _ent->origin);
-	
+	FranAudio_AlFunction(alGetSourcei, sourceHandle, AL_SOURCE_STATE, &sourceState);
+
+	FranAudio_AlFunction(alSourcefv, sourceHandle, AL_POSITION, _ent->origin);
+
 	//if (_ent->model)
 		//sampleHandle.setRadius(_ent->model->radius);
 }
@@ -113,24 +122,68 @@ void FRANAUDIO_API FranAudio::Sound::SetPaused(bool _pause, bool isMenu)
 
 void FranAudio::Sound::Kill()
 {
-	//if (audioSource)
-	//	audioSource->Stop(); // Stop first
+	if (sampleDir == "ERR")
+	{
+		FranAudio::Sound::SoundsVector.PopIndex(FranAudio::Sound::SoundsVector.Find(*this));
+		return;
+	}
 
-	//if (!sampleData && sampleDir != "ERR")
-		//unloadsample(sampleData);
+	FranAudio_AlFunction(alDeleteSources, 1, &sourceHandle);
+	FranAudio_AlFunction(alDeleteBuffers, 1, &sourceBuffer);
 
-	sampleDir = "ERR";
+	//sampleDir = "ERR";
 
-	//for (auto& channel : FranAudio::Channel::channelsVec)
-	//{
-		// Remove this sound from the list;
-	//	channel.sounds.PopIndex(channel.sounds.Find(*this));
-	//}
+	// Remove this sound from the list;
+	size_t indexToPop = FranAudio::Sound::SoundsVector.Find(*this);
+	if (indexToPop != SIZE_MAX || indexToPop < FranAudio::Sound::SoundsVector.Size())
+		FranAudio::Sound::SoundsVector.PopIndex(indexToPop);
 }
 
 int FRANAUDIO_API FranAudio::Sound::EntIndex()
 {
 	return entity;
+}
+
+inline bool FranAudio::Sound::PrecacheSound(std::string _dir)
+{
+	if (SoundsMap.find(_dir) == SoundsMap.end())
+	{
+		FranAudio::Globals::LogMessage(std::string(std::string("Trying to load ") + "\"" + _dir.c_str() + "\"").c_str());
+
+		SoundSample _sample{};
+
+		/* Load the WAV */
+		if (SDL_LoadWAV(_dir.c_str(), &_sample.info, &_sample.data, &_sample.length) == NULL)
+		{
+			FranAudio::Globals::LogMessage(std::string(std::string("Error loading sound: ") + "\"" + _dir.c_str() + "\"").c_str());
+			return false;
+		}
+
+		if (_sample.info.channels == 1 && SDL_AUDIO_BITSIZE(_sample.info.format) == 8)
+			_sample.format = AL_FORMAT_MONO8;
+		else if (_sample.info.channels == 1 && SDL_AUDIO_BITSIZE(_sample.info.format) == 16)
+			_sample.format = AL_FORMAT_MONO16;
+		else if (_sample.info.channels == 2 && SDL_AUDIO_BITSIZE(_sample.info.format) == 8)
+			_sample.format = AL_FORMAT_STEREO8;
+		else if (_sample.info.channels == 2 && SDL_AUDIO_BITSIZE(_sample.info.format) == 16)
+			_sample.format = AL_FORMAT_STEREO16;
+
+		SoundsMap.insert({_dir, _sample});
+	}
+	
+	return true;
+}
+
+inline FranAudio::SoundSample FranAudio::Sound::FindPrecachedSound(std::string _dir)
+{
+	if (SoundsMap.find(_dir) == SoundsMap.end())
+	{
+		return SoundSample(); // Return empty sound sample
+	}
+	else
+	{
+		return SoundsMap.at(_dir);
+	}
 }
 
 

@@ -56,12 +56,9 @@ void ClientImGui_HookedDraw()
 	}
 
 
-	for (auto& channel : FranAudio::Channel::channelsVec)
+	for (auto& sound : FranAudio::Sound::SoundsVector)
 	{
-		for (auto& sound : channel.sounds)
-		{
-			sound.SetPaused(FranUtils::Globals::isPaused, true);
-		}
+		sound.SetPaused(FranUtils::Globals::isPaused, true);
 	}
 
 	mainImgui->DrawImgui();

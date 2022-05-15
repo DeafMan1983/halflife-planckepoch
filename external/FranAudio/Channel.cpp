@@ -4,7 +4,4 @@
 #include "FranAudio.hpp"
 #include "Channel.hpp"
 
-FranAudio::Channel::Channel()
-{
-
-}
+// Nofin to see hea m8

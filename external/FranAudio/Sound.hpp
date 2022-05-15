@@ -1,23 +1,39 @@
 // FranticDreamer 2022
 #pragma once
 
+#include <map>
+
 #include "FranAudioAPI.hpp"
 #include "FranAudio.hpp"
 
 #include "cl_entity.h"
 #include "com_model.h"
 
-#include "SoloudTypes.hpp"
+#include "FranVector.hpp"
+
+#include "SDL2/SDL.h"
 
 namespace FranAudio
 {
 	enum class ChannelType : unsigned int;
 
+	struct SoundSample
+	{
+		SDL_AudioSpec info;
+		Uint8* data;
+		Uint32 length;
+
+		ALenum format;
+		
+		SoundSample() : data(nullptr), length(0), format(0){};
+	};
+
 	class Sound
 	{
 	private:
-		SoloudSound sampleData;
-		SoloudSoundHandle sampleHandle;
+		ALuint sourceHandle;
+		ALint sourceState;
+		ALuint sourceBuffer;
 
 		// Half Life Sound Data Structure
 
@@ -36,7 +52,6 @@ namespace FranAudio
 		bool isPausedByPauseMenu;
 
 	public:
-
 		Sound();
 
 		// This constructor is compatible with old EMIT_SOUND macros
@@ -61,5 +76,16 @@ namespace FranAudio
 		// Entity index of owner
 		int FRANAUDIO_API EntIndex();
 
+		// ========
+		// Static Members
+		// ========
+
+		inline static FRANAUDIO_API FranUtils::FranVector<Sound> SoundsVector;
+
+		inline static std::map<std::string, SoundSample> SoundsMap;
+
+		inline static bool PrecacheSound(std::string _dir);
+
+		inline static SoundSample FindPrecachedSound(std::string _dir);
 	};
 };

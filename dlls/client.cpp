@@ -55,6 +55,9 @@ DLL_GLOBAL unsigned int g_ulFrameCount;
 
 extern void CopyToBodyQue(entvars_t* pev);
 
+extern std::vector<std::string> PrecacheQueue;
+extern void EngOverride_PrecacheSoundVector();
+
 void LinkUserMessages();
 
 /*
@@ -1021,6 +1024,8 @@ Called every frame after physics are run
 */
 void PlayerPostThink(edict_t* pEntity)
 {
+	static float nextprecacheframetime = gpGlobals->time + 0.1f;
+
 	entvars_t* pev = &pEntity->v;
 	CBasePlayer* pPlayer = (CBasePlayer*)GET_PRIVATE(pEntity);
 

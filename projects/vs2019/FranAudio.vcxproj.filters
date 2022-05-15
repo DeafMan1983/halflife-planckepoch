@@ -48,6 +48,9 @@
     <ClCompile Include="..\..\external\FranAudio\Channel.cpp">
       <Filter>Source Files\external\FranAudio</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\external\FranAudio\ALWrappers.cpp">
+      <Filter>Source Files\external\FranAudio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\external\FranAudio\Channel.hpp">
@@ -68,7 +71,7 @@
     <ClInclude Include="..\..\external\FranAudio\FranVector.hpp">
       <Filter>Header Files\external\FranAudio</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\external\FranAudio\SoloudTypes.hpp">
+    <ClInclude Include="..\..\external\FranAudio\ALWrappers.hpp">
       <Filter>Header Files\external\FranAudio</Filter>
     </ClInclude>
   </ItemGroup>
