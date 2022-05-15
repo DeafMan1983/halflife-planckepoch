@@ -16,8 +16,8 @@
 
 #include "cl_entity.h"
 
-#include "FranAudio/ALWrappers.hpp"
-#include "FranAudio/Utilities.hpp"
+#include "ALWrappers.hpp"
+#include "Utilities.hpp"
 
 /*
 // Reserved for initialisation

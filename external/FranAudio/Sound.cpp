@@ -129,7 +129,7 @@ void FRANAUDIO_API FranAudio::Sound::SetVolume(float _volume)
 
 void FRANAUDIO_API FranAudio::Sound::SetPitch(float _pitch)
 {
-	_pitch = pitch;
+	pitch = _pitch;
 	FranAudio_AlFunction(alSourcef, sourceHandle, AL_PITCH, _pitch / 100);
 }
 
