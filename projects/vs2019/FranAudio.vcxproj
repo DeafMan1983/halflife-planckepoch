@@ -25,6 +25,7 @@
     <ClCompile Include="..\..\external\FranAudio\Channel.cpp" />
     <ClCompile Include="..\..\external\FranAudio\FranAudio.cpp" />
     <ClCompile Include="..\..\external\FranAudio\Sound.cpp" />
+    <ClCompile Include="..\..\external\FranAudio\Utilities.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

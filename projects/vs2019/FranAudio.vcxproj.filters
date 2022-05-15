@@ -51,6 +51,9 @@
     <ClCompile Include="..\..\external\FranAudio\ALWrappers.cpp">
       <Filter>Source Files\external\FranAudio</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\external\FranAudio\Utilities.cpp">
+      <Filter>Source Files\external\FranAudio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\external\FranAudio\Channel.hpp">
