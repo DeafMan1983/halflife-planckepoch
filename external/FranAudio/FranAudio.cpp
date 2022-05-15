@@ -128,13 +128,14 @@ void FRANAUDIO_API FranAudio::EmitSound(int _entityIndex, int _channel, const ch
 		{
 			if (tempdir == sound.GetDir() && _entityIndex == sound.EntIndex())
 			{
-			
 				if (_flags & SND_STOP)
 					sound.Kill();
 				if (_flags & SND_CHANGE_VOL)
 					sound.SetVolume(_volume);
 				if (_flags & SND_CHANGE_PITCH)
 					sound.SetPitch(_pitch);
+
+				return;
 			}
 		}
 		return;

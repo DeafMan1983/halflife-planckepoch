@@ -75,7 +75,7 @@ namespace FranAudio
 
 		void SetPitch(float _pitch);
 
-		const char* GetDir();
+		std::string GetDir();
 
 		void Kill();
 

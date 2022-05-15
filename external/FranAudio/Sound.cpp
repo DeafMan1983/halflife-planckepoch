@@ -133,9 +133,9 @@ void FranAudio::Sound::SetPitch(float _pitch)
 	FranAudio_AlFunction(alSourcef, sourceHandle, AL_PITCH, _pitch / 100);
 }
 
-const char* FranAudio::Sound::GetDir()
+std::string FranAudio::Sound::GetDir()
 {
-	return sampleDir.c_str();
+	return sampleDir;
 }
 
 void FranAudio::Sound::Kill()
