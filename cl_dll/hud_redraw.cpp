@@ -112,8 +112,13 @@ bool CHud::Redraw(float flTime, bool intermission)
 
 	FranAudio::SetListenerTransform(gEngfuncs.GetLocalPlayer()->origin, up, forward);
 
+	size_t beginSize = FranAudio::Sound::SoundsVector.Size();
+
 	for (auto& sound : FranAudio::Sound::SoundsVector)
 	{
+		if (beginSize != FranAudio::Sound::SoundsVector.Size())
+			break;
+
 		sound.Update(gEngfuncs.GetEntityByIndex(sound.EntIndex()));
 		// Moved to imgui hookeddraw
 		//sound.SetPaused(FranUtils::Globals::isPaused, true);

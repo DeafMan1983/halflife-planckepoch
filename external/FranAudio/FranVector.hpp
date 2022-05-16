@@ -1,6 +1,8 @@
 // FranticDreamer 2022
 #pragma once
 
+#include "FranAudioAPI.hpp"
+
 #include <stdexcept>
 
 namespace FranUtils
@@ -9,7 +11,7 @@ namespace FranUtils
 	// A Generic "Dynamic Array" container, similar to std::vector
 	// The class is exportable to dlls, so you can easily use a dllexport macro
 	template <class _T>
-	class FranVector
+	class FRANAUDIO_API FranVector
 	{
 	private:
 		_T* baseArrayData;

@@ -29,6 +29,8 @@ namespace FranAudio
 		ALint sourceState;
 		ALuint sourceBuffer;
 
+		uint8_t* tempSoundBuffer;
+
 		// Half Life Sound Data Structure
 
 		int entity; // Entindex

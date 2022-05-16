@@ -20,9 +20,10 @@ FranAudio::Sound::Sound()
 	attenuation(0),
 	flags(0),
 	pitch(0),
-	firstUpdate(true)
+	firstUpdate(true),
+	tempSoundBuffer(nullptr)
 {
-
+	tempSoundBuffer = nullptr;
 }
 
 FranAudio::Sound::Sound(int _entityIndex, int _channel, const char* _sample, float _volume, float _attenuation, int _flags, int _pitch) 
@@ -33,7 +34,8 @@ FranAudio::Sound::Sound(int _entityIndex, int _channel, const char* _sample, flo
 	attenuation(_attenuation), 
 	flags(_flags), 
 	pitch(_pitch),
-	firstUpdate(true)
+	firstUpdate(true),
+	tempSoundBuffer(nullptr)
 {
 
 	if (sampleDir == "ERR")
@@ -52,15 +54,17 @@ FranAudio::Sound::Sound(int _entityIndex, int _channel, const char* _sample, flo
 
 	FranAudio::Globals::LogMessage(std::string(std::string("Trying to play sample: ") + "\"" + sampleDir + "\"" + " - " + std::to_string(sound.lengthSeconds) + " | " + std::to_string(sound.channelCount) + " | " + std::to_string(sound.sampleRate) + " | " + std::to_string(sound.samples.size())).c_str());
 
-	uint8_t* tempbuf = new uint8_t[sound.samples.size()];
+	tempSoundBuffer = new uint8_t[sound.samples.size()];
 
-	nqr::ConvertFromFloat32(tempbuf, sound.samples.data(), sound.samples.size(), sound.sourceFormat, nqr::DITHER_NONE);
+	nqr::ConvertFromFloat32(tempSoundBuffer, sound.samples.data(), sound.samples.size(), sound.sourceFormat, nqr::DITHER_NONE);
 
 	FranAudio_AlFunction(alGenBuffers, 1, &sourceBuffer);
-	FranAudio_AlFunction(alBufferData, sourceBuffer, GetFormat(sound.channelCount, sound.sourceFormat), tempbuf, sound.samples.size(), sound.sampleRate);
+	FranAudio_AlFunction(alBufferData, sourceBuffer, GetFormat(sound.channelCount, sound.sourceFormat), tempSoundBuffer, sound.samples.size(), sound.sampleRate);
 
-	delete[] tempbuf;
-
+	// This will be used for mouths later. Delete in kill function OR destructor.
+	//delete[] tempSoundBuffer; 
+	//tempSoundBuffer = nullptr;
+	
 	FranAudio_AlFunction(alGenSources, 1, &sourceHandle);
 	FranAudio_AlFunction(alSourcef, sourceHandle, AL_PITCH, 1);
 	FranAudio_AlFunction(alSourcef, sourceHandle, AL_GAIN, volume);
@@ -108,6 +112,9 @@ bool FranAudio::Sound::operator==(const Sound& _other)
 
 void FRANAUDIO_API FranAudio::Sound::Update(cl_entity_t* _ent)
 {
+	if (sourceState == AL_STOPPED)
+		_ent->mouth.mouthopen = 0;
+
 	if (sampleDir == "ERR" || _ent == nullptr || sourceState == AL_STOPPED)
 	{
 		Kill();
@@ -125,6 +132,19 @@ void FRANAUDIO_API FranAudio::Sound::Update(cl_entity_t* _ent)
 	FranAudio_AlFunction(alGetSourcei, sourceHandle, AL_SOURCE_STATE, &sourceState);
 
 	FranAudio_AlFunction(alSourcefv, sourceHandle, AL_POSITION, _ent->origin);
+	
+	if (tempSoundBuffer == nullptr)
+	{
+		_ent->mouth.mouthopen = 0;
+		return;
+	}
+
+	ALint sampleOffset;
+	FranAudio_AlFunction(alGetSourcei, sourceHandle, AL_SAMPLE_OFFSET, &sampleOffset);
+
+	auto& sound = FindPrecachedSoundSingle(sampleDir);;
+
+	_ent->mouth.mouthopen = tempSoundBuffer[sampleOffset];
 
 	//if (_ent->model)
 		//sampleHandle.setRadius(_ent->model->radius);
@@ -179,6 +199,9 @@ bool FranAudio::Sound::Kill()
 			return false;
 		}
 	}
+
+	if (tempSoundBuffer != nullptr)
+		delete[] tempSoundBuffer;
 
 	FranAudio_AlFunction(alSourceStop, sourceHandle);
 	FranAudio_AlFunction(alDeleteSources, 1, &sourceHandle);
