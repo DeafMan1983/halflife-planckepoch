@@ -12,9 +12,10 @@ struct SoundSettings_s
 			float masterVolume;
 			float mp3Volume;
 			float hevVolume;
+			float wpnVolume;
 			bool hiRezSound;
 		};
-		float data[3];
+		float data[4];
 	};
 };
 

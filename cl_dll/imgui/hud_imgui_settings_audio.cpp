@@ -37,9 +37,12 @@
 
 void CClientImguiAudioSettings::Init()
 {
+	CVAR_CREATE("cl_weapon_volume", "1", FCVAR_ARCHIVE);
+
 	liveSoundSettings.masterVolume	= 0.0f;
 	liveSoundSettings.mp3Volume		= 0.0f;
 	liveSoundSettings.hevVolume		= 0.0f;
+	liveSoundSettings.wpnVolume		= 0.0f;
 	liveSoundSettings.hiRezSound	= true;
 
 	ParseConfigFile("config.cfg");
@@ -120,6 +123,25 @@ void CClientImguiAudioSettings::ParseConfigFile(std::string filedir)
 
 			continue;
 		}
+		else if (line.substr(0, 17) == "cl_weapon_volume ") // Weapon Volume
+		{
+			line = line.erase(0, 17);
+
+			// Remove first and last characters of the string, which are the quote marks
+			line.pop_back();
+			line.erase(line.begin());
+
+			if (!line.empty())
+			{
+				liveSoundSettings.wpnVolume = std::stof(line);
+			}
+			else
+			{
+				gEngfuncs.Con_DPrintf("\nERR: config.cfg - Can't parse the bind line %d. Are you sure the syntax is correct?\n", lineIteration);
+			}
+
+			continue;
+		}
 		else if (line.substr(0, 8) == "hisound ") // MP3 Volume
 		{
 			line = line.erase(0, 8);
@@ -162,6 +184,10 @@ void CClientImguiAudioSettings::DrawAudioSettingsTab()
 		ImGui::Text("HEV Volume: ");
 		ImGui::SliderFloat(gHUD.m_clImgui.GetUniqueSliderName().c_str(), &liveSoundSettings.hevVolume, 0.0f, 1.0f, "%.2f");
 		
+		ImGui::Text("Weapon Volume: ");
+		ImGui::SliderFloat(gHUD.m_clImgui.GetUniqueSliderName().c_str(), &liveSoundSettings.wpnVolume, 0.0f, 1.0f, "%.2f");
+		
+
 		ImGui::Checkbox("Hi-Res Sound", &liveSoundSettings.hiRezSound);
 
 		ImGui::SetWindowFontScale(0.75f);
@@ -198,11 +224,13 @@ void CClientImguiAudioSettings::ApplySoundSettings()
 	std::string mastervolcommand = "volume " + std::to_string(liveSoundSettings.masterVolume);
 	std::string hevvolcommand = "mp3volume " + std::to_string(liveSoundSettings.mp3Volume);
 	std::string mp3volcommand = "suitvolume " + std::to_string(liveSoundSettings.hevVolume);
+	std::string wpnvolcommand = "cl_weapon_volume " + std::to_string(liveSoundSettings.wpnVolume);
 	std::string hirezcommand = "hisound " + std::to_string((int)liveSoundSettings.hiRezSound);
 
 	gEngfuncs.pfnClientCmd(mastervolcommand.c_str());
 	gEngfuncs.pfnClientCmd(hevvolcommand.c_str());
 	gEngfuncs.pfnClientCmd(mp3volcommand.c_str());
+	gEngfuncs.pfnClientCmd(wpnvolcommand.c_str());
 	gEngfuncs.pfnClientCmd(hirezcommand.c_str());
 
 	currentSoundSettings = liveSoundSettings;

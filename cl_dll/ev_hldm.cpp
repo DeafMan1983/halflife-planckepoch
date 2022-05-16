@@ -554,7 +554,7 @@ void EV_FireGlock1(event_args_t* args)
 
 	EV_EjectBrass(ShellOrigin, ShellVelocity, angles[YAW], shell, TE_BOUNCE_SHELL);
 
-	HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/pl_gun3.wav", gEngfuncs.pfnRandomFloat(0.92, 1.0), ATTN_NORM, 0, 98 + gEngfuncs.pfnRandomLong(0, 3));
+	HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/pl_gun3.wav", gEngfuncs.pfnGetCvarFloat("cl_weapon_volume") * gEngfuncs.pfnRandomFloat(0.92, 1.0), ATTN_NORM, 0, 98 + gEngfuncs.pfnRandomLong(0, 3));
 
 	EV_GetGunPosition(args, vecSrc, origin);
 
@@ -600,7 +600,7 @@ void EV_FireGlock2(event_args_t* args)
 
 	EV_EjectBrass(ShellOrigin, ShellVelocity, angles[YAW], shell, TE_BOUNCE_SHELL);
 
-	HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/pl_gun3.wav", gEngfuncs.pfnRandomFloat(0.92, 1.0), ATTN_NORM, 0, 98 + gEngfuncs.pfnRandomLong(0, 3));
+	HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/pl_gun3.wav", gEngfuncs.pfnGetCvarFloat("cl_weapon_volume") * gEngfuncs.pfnRandomFloat(0.92, 1.0), ATTN_NORM, 0, 98 + gEngfuncs.pfnRandomLong(0, 3));
 
 	EV_GetGunPosition(args, vecSrc, origin);
 
@@ -676,7 +676,7 @@ void EV_FireShotGunDouble(event_args_t* args)
 		EV_EjectBrass(ShellOrigin, ShellVelocity, angles[YAW], shell, TE_BOUNCE_SHOTSHELL);
 	}
 
-	HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/dbarrel1.wav", gEngfuncs.pfnRandomFloat(0.98, 1.0), ATTN_NORM, 0, 85 + gEngfuncs.pfnRandomLong(0, 0x1f));
+	HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/dbarrel1.wav", gEngfuncs.pfnGetCvarFloat("cl_weapon_volume") * gEngfuncs.pfnRandomFloat(0.98, 1.0), ATTN_NORM, 0, 85 + gEngfuncs.pfnRandomLong(0, 0x1f));
 
 	EV_GetGunPosition(args, vecSrc, origin);
 	VectorCopy(forward, vecAiming);
@@ -726,7 +726,7 @@ void EV_FireShotGunSingle(event_args_t* args)
 
 	EV_EjectBrass(ShellOrigin, ShellVelocity, angles[YAW], shell, TE_BOUNCE_SHOTSHELL);
 
-	HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/sbarrel1.wav", gEngfuncs.pfnRandomFloat(0.95, 1.0), ATTN_NORM, 0, 93 + gEngfuncs.pfnRandomLong(0, 0x1f));
+	HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/sbarrel1.wav", gEngfuncs.pfnGetCvarFloat("cl_weapon_volume") * gEngfuncs.pfnRandomFloat(0.95, 1.0), ATTN_NORM, 0, 93 + gEngfuncs.pfnRandomLong(0, 0x1f));
 
 	EV_GetGunPosition(args, vecSrc, origin);
 	VectorCopy(forward, vecAiming);
@@ -785,10 +785,10 @@ void EV_FireMP5(event_args_t* args)
 	switch (gEngfuncs.pfnRandomLong(0, 1))
 	{
 	case 0:
-		HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/hks1.wav", 1, ATTN_NORM, 0, 94 + gEngfuncs.pfnRandomLong(0, 0xf));
+		HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/hks1.wav", gEngfuncs.pfnGetCvarFloat("cl_weapon_volume"), ATTN_NORM, 0, 94 + gEngfuncs.pfnRandomLong(0, 0xf));
 		break;
 	case 1:
-		HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/hks2.wav", 1, ATTN_NORM, 0, 94 + gEngfuncs.pfnRandomLong(0, 0xf));
+		HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/hks2.wav", gEngfuncs.pfnGetCvarFloat("cl_weapon_volume"), ATTN_NORM, 0, 94 + gEngfuncs.pfnRandomLong(0, 0xf));
 		break;
 	}
 
@@ -817,10 +817,10 @@ void EV_FireMP52(event_args_t* args)
 	switch (gEngfuncs.pfnRandomLong(0, 1))
 	{
 	case 0:
-		HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/glauncher.wav", 1, ATTN_NORM, 0, 94 + gEngfuncs.pfnRandomLong(0, 0xf));
+		HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/glauncher.wav", gEngfuncs.pfnGetCvarFloat("cl_weapon_volume"), ATTN_NORM, 0, 94 + gEngfuncs.pfnRandomLong(0, 0xf));
 		break;
 	case 1:
-		HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/glauncher2.wav", 1, ATTN_NORM, 0, 94 + gEngfuncs.pfnRandomLong(0, 0xf));
+		HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/glauncher2.wav", gEngfuncs.pfnGetCvarFloat("cl_weapon_volume"), ATTN_NORM, 0, 94 + gEngfuncs.pfnRandomLong(0, 0xf));
 		break;
 	}
 }
@@ -864,10 +864,10 @@ void EV_FirePython(event_args_t* args)
 	switch (gEngfuncs.pfnRandomLong(0, 1))
 	{
 	case 0:
-		HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/357_shot1.wav", gEngfuncs.pfnRandomFloat(0.8, 0.9), ATTN_NORM, 0, PITCH_NORM);
+		HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/357_shot1.wav", gEngfuncs.pfnGetCvarFloat("cl_weapon_volume") * gEngfuncs.pfnRandomFloat(0.8, 0.9), ATTN_NORM, 0, PITCH_NORM);
 		break;
 	case 1:
-		HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/357_shot2.wav", gEngfuncs.pfnRandomFloat(0.8, 0.9), ATTN_NORM, 0, PITCH_NORM);
+		HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/357_shot2.wav", gEngfuncs.pfnGetCvarFloat("cl_weapon_volume") * gEngfuncs.pfnRandomFloat(0.8, 0.9), ATTN_NORM, 0, PITCH_NORM);
 		break;
 	}
 
@@ -904,7 +904,7 @@ void EV_SpinGauss(event_args_t* args)
 
 	iSoundState = 0 != args->bparam1 ? SND_CHANGE_PITCH : 0;
 
-	HLDM_EmitSound(idx, origin, CHAN_WEAPON, "ambience/pulsemachine.wav", 1.0, ATTN_NORM, iSoundState, pitch);
+	HLDM_EmitSound(idx, origin, CHAN_WEAPON, "ambience/pulsemachine.wav", gEngfuncs.pfnGetCvarFloat("cl_weapon_volume"), ATTN_NORM, iSoundState, pitch);
 }
 
 /*
@@ -973,7 +973,7 @@ void EV_FireGauss(event_args_t* args)
 			g_flApplyVel = flDamage;
 	}
 
-	HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/gauss2.wav", 0.5 + flDamage * (1.0 / 400.0), ATTN_NORM, 0, 85 + gEngfuncs.pfnRandomLong(0, 0x1f));
+	HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/gauss2.wav", gEngfuncs.pfnGetCvarFloat("cl_weapon_volume") * (0.5 + flDamage * (1.0 / 400.0)), ATTN_NORM, 0, 85 + gEngfuncs.pfnRandomLong(0, 0x1f));
 
 	while (flDamage > 10 && nMaxHits > 0)
 	{
@@ -1228,8 +1228,8 @@ void EV_FireCrossbow2(event_args_t* args)
 
 	VectorMA(vecSrc, 8192, forward, vecEnd);
 
-	HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/xbow_fire1.wav", 1, ATTN_NORM, 0, 93 + gEngfuncs.pfnRandomLong(0, 0xF));
-	HLDM_EmitSound(idx, origin, CHAN_ITEM, "weapons/xbow_reload1.wav", gEngfuncs.pfnRandomFloat(0.95, 1.0), ATTN_NORM, 0, 93 + gEngfuncs.pfnRandomLong(0, 0xF));
+	HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/xbow_fire1.wav", gEngfuncs.pfnGetCvarFloat("cl_weapon_volume"), ATTN_NORM, 0, 93 + gEngfuncs.pfnRandomLong(0, 0xF));
+	HLDM_EmitSound(idx, origin, CHAN_ITEM, "weapons/xbow_reload1.wav", gEngfuncs.pfnGetCvarFloat("cl_weapon_volume") * gEngfuncs.pfnRandomFloat(0.95, 1.0), ATTN_NORM, 0, 93 + gEngfuncs.pfnRandomLong(0, 0xF));
 
 	if (EV_IsLocal(idx))
 	{
@@ -1303,8 +1303,8 @@ void EV_FireCrossbow(event_args_t* args)
 	idx = args->entindex;
 	VectorCopy(args->origin, origin);
 
-	HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/xbow_fire1.wav", 1, ATTN_NORM, 0, 93 + gEngfuncs.pfnRandomLong(0, 0xF));
-	HLDM_EmitSound(idx, origin, CHAN_ITEM, "weapons/xbow_reload1.wav", gEngfuncs.pfnRandomFloat(0.95, 1.0), ATTN_NORM, 0, 93 + gEngfuncs.pfnRandomLong(0, 0xF));
+	HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/xbow_fire1.wav", gEngfuncs.pfnGetCvarFloat("cl_weapon_volume"), ATTN_NORM, 0, 93 + gEngfuncs.pfnRandomLong(0, 0xF));
+	HLDM_EmitSound(idx, origin, CHAN_ITEM, "weapons/xbow_reload1.wav", gEngfuncs.pfnGetCvarFloat("cl_weapon_volume") * gEngfuncs.pfnRandomFloat(0.95, 1.0), ATTN_NORM, 0, 93 + gEngfuncs.pfnRandomLong(0, 0xF));
 
 	//Only play the weapon anims if I shot it.
 	if (EV_IsLocal(idx))
@@ -1332,8 +1332,8 @@ void EV_FireRpg(event_args_t* args)
 	idx = args->entindex;
 	VectorCopy(args->origin, origin);
 
-	HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/rocketfire1.wav", 0.9, ATTN_NORM, 0, PITCH_NORM);
-	HLDM_EmitSound(idx, origin, CHAN_ITEM, "weapons/glauncher.wav", 0.7, ATTN_NORM, 0, PITCH_NORM);
+	HLDM_EmitSound(idx, origin, CHAN_WEAPON, "weapons/rocketfire1.wav", gEngfuncs.pfnGetCvarFloat("cl_weapon_volume") * 0.9, ATTN_NORM, 0, PITCH_NORM);
+	HLDM_EmitSound(idx, origin, CHAN_ITEM, "weapons/glauncher.wav", gEngfuncs.pfnGetCvarFloat("cl_weapon_volume") * 0.7, ATTN_NORM, 0, PITCH_NORM);
 
 	//Only play the weapon anims if I shot it.
 	if (EV_IsLocal(idx))
@@ -1381,9 +1381,9 @@ void EV_EgonFire(event_args_t* args)
 	if (iStartup)
 	{
 		if (iFireMode == FIRE_WIDE)
-			HLDM_EmitSound(idx, origin, CHAN_WEAPON, EGON_SOUND_STARTUP, 0.98, ATTN_NORM, 0, 125);
+			HLDM_EmitSound(idx, origin, CHAN_WEAPON, EGON_SOUND_STARTUP, gEngfuncs.pfnGetCvarFloat("cl_weapon_volume") * 0.98, ATTN_NORM, 0, 125);
 		else
-			HLDM_EmitSound(idx, origin, CHAN_WEAPON, EGON_SOUND_STARTUP, 0.9, ATTN_NORM, 0, 100);
+			HLDM_EmitSound(idx, origin, CHAN_WEAPON, EGON_SOUND_STARTUP, gEngfuncs.pfnGetCvarFloat("cl_weapon_volume") * 0.9, ATTN_NORM, 0, 100);
 	}
 	else
 	{
@@ -1394,9 +1394,9 @@ void EV_EgonFire(event_args_t* args)
 		gEngfuncs.pEventAPI->EV_StopSound(idx, CHAN_STATIC, EGON_SOUND_RUN);
 
 		if (iFireMode == FIRE_WIDE)
-			HLDM_EmitSound(idx, origin, CHAN_STATIC, EGON_SOUND_RUN, 0.98, ATTN_NORM, 0, 125);
+			HLDM_EmitSound(idx, origin, CHAN_STATIC, EGON_SOUND_RUN, gEngfuncs.pfnGetCvarFloat("cl_weapon_volume") * 0.98, ATTN_NORM, 0, 125);
 		else
-			HLDM_EmitSound(idx, origin, CHAN_STATIC, EGON_SOUND_RUN, 0.9, ATTN_NORM, 0, 100);
+			HLDM_EmitSound(idx, origin, CHAN_STATIC, EGON_SOUND_RUN, gEngfuncs.pfnGetCvarFloat("cl_weapon_volume") * 0.9, ATTN_NORM, 0, 100);
 	}
 
 	//Only play the weapon anims if I shot it.
@@ -1477,7 +1477,7 @@ void EV_EgonStop(event_args_t* args)
 	gEngfuncs.pEventAPI->EV_StopSound(idx, CHAN_STATIC, EGON_SOUND_RUN);
 
 	if (0 != args->iparam1)
-		HLDM_EmitSound(idx, origin, CHAN_WEAPON, EGON_SOUND_OFF, 0.98, ATTN_NORM, 0, 100);
+		HLDM_EmitSound(idx, origin, CHAN_WEAPON, EGON_SOUND_OFF, gEngfuncs.pfnGetCvarFloat("cl_weapon_volume") * 0.98, ATTN_NORM, 0, 100);
 
 	if (EV_IsLocal(idx))
 	{
@@ -1541,13 +1541,13 @@ void EV_HornetGunFire(event_args_t* args)
 	switch (gEngfuncs.pfnRandomLong(0, 2))
 	{
 	case 0:
-		HLDM_EmitSound(idx, origin, CHAN_WEAPON, "agrunt/ag_fire1.wav", 1, ATTN_NORM, 0, 100);
+		HLDM_EmitSound(idx, origin, CHAN_WEAPON, "agrunt/ag_fire1.wav", gEngfuncs.pfnGetCvarFloat("cl_weapon_volume"), ATTN_NORM, 0, 100);
 		break;
 	case 1:
-		HLDM_EmitSound(idx, origin, CHAN_WEAPON, "agrunt/ag_fire2.wav", 1, ATTN_NORM, 0, 100);
+		HLDM_EmitSound(idx, origin, CHAN_WEAPON, "agrunt/ag_fire2.wav", gEngfuncs.pfnGetCvarFloat("cl_weapon_volume"), ATTN_NORM, 0, 100);
 		break;
 	case 2:
-		HLDM_EmitSound(idx, origin, CHAN_WEAPON, "agrunt/ag_fire3.wav", 1, ATTN_NORM, 0, 100);
+		HLDM_EmitSound(idx, origin, CHAN_WEAPON, "agrunt/ag_fire3.wav", gEngfuncs.pfnGetCvarFloat("cl_weapon_volume"), ATTN_NORM, 0, 100);
 		break;
 	}
 }

@@ -1,0 +1,7 @@
+Updated libvorbis to libvorbis-1.3.7
+
+Small code wise changes can be found as "// CHANGE - Fran:"
+Here is a lsit of them anyway:
+
+floor1.c - Renamed FLOOR1_fromdB_LOOKUP as FLOOR1_fromdB_LOOKUP_RE for conflict reasons.
+codebook.c - Renamed bitreverse as bitreverse_re for conflict reasons.

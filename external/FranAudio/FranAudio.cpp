@@ -70,6 +70,11 @@ void FranAudio::Globals::Init(const char* sndDir, const char* fallbackSndDir)
 
 void FranAudio::Globals::Refresh()
 {
+	if (FranAudio::Sound::SoundsVector.Size() > 0)
+	{
+		FranAudio::Sound::KillAllSounds();
+	}
+
 	FranAudio::Sound::SoundsVector.Clear();
 }
 

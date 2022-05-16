@@ -22,10 +22,6 @@
 #include "UserMessages.h"
 #include "FranUtils.hpp"
 
-#ifdef CLIENT_DLL
-#include "FranAudio/Sound.hpp"
-#endif // CLIENT_DLL
-
 LINK_ENTITY_TO_CLASS(weapon_glock, CGlock);
 LINK_ENTITY_TO_CLASS(weapon_9mmhandgun, CGlock);
 

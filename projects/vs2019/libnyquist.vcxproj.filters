@@ -1,0 +1,203 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\external">
+      <UniqueIdentifier>{85d0f060-619f-4edb-bf7c-9ba9fa519474}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\external">
+      <UniqueIdentifier>{a6bb9fd5-056c-4aa5-bffb-a11eb6fb9312}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\external\libnyquist">
+      <UniqueIdentifier>{ae074e0e-b7c4-401a-969e-cea35a6bc805}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\external\libnyquist">
+      <UniqueIdentifier>{bb5c462e-1a1f-4cfe-88b1-adafb53f7c95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party">
+      <UniqueIdentifier>{71f20b1a-a3b0-441b-a7a4-e9c0ba3bbdad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\wavpack">
+      <UniqueIdentifier>{c1b3ea1d-56fd-4351-a0fa-74122ee87e58}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\external\libnyquist\src\Mp3Decoder.cpp">
+      <Filter>Source Files\external\libnyquist</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\src\MusepackDecoder.cpp">
+      <Filter>Source Files\external\libnyquist</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\src\MusepackDependencies.c">
+      <Filter>Source Files\external\libnyquist</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\src\OpusDecoder.cpp">
+      <Filter>Source Files\external\libnyquist</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\src\OpusDependencies.c">
+      <Filter>Source Files\external\libnyquist</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\src\VorbisDecoder.cpp">
+      <Filter>Source Files\external\libnyquist</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\src\VorbisDependencies.c">
+      <Filter>Source Files\external\libnyquist</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\src\WavDecoder.cpp">
+      <Filter>Source Files\external\libnyquist</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\src\WavPackDecoder.cpp">
+      <Filter>Source Files\external\libnyquist</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\src\Common.cpp">
+      <Filter>Source Files\external\libnyquist</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\src\Encoders.cpp">
+      <Filter>Source Files\external\libnyquist</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\src\FlacDecoder.cpp">
+      <Filter>Source Files\external\libnyquist</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\src\FlacDependencies.c">
+      <Filter>Source Files\external\libnyquist</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\common_utils.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\decorr_utils.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\entropy_utils.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\extra1.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\extra2.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\open_filename.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\open_legacy.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\open_raw.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\open_utils.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\pack.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\pack_dns.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\pack_dsd.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\pack_floats.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\pack_utils.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\read_words.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\tag_utils.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\tags.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\unpack.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\unpack_dsd.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\unpack_floats.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\unpack_seek.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\unpack_utils.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\unpack3.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\unpack3_open.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\unpack3_seek.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\write_words.c">
+      <Filter>third_party\wavpack</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\external\libnyquist\include\libnyquist\Common.h">
+      <Filter>Header Files\external\libnyquist</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\external\libnyquist\include\libnyquist\Decoders.h">
+      <Filter>Header Files\external\libnyquist</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\external\libnyquist\include\libnyquist\Encoders.h">
+      <Filter>Header Files\external\libnyquist</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\external\libnyquist\third_party\wavpack\src\decorr_tables.h">
+      <Filter>third_party\wavpack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\external\libnyquist\third_party\wavpack\src\unpack3.h">
+      <Filter>third_party\wavpack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\external\libnyquist\third_party\wavpack\src\wavpack_local.h">
+      <Filter>third_party\wavpack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\external\libnyquist\third_party\wavpack\src\wavpack_version.h">
+      <Filter>third_party\wavpack</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\external\libnyquist\third_party\wavpack\src\pack_x86.S">
+      <Filter>third_party\wavpack</Filter>
+    </None>
+    <None Include="..\..\external\libnyquist\third_party\wavpack\src\unpack_x64.asm">
+      <Filter>third_party\wavpack</Filter>
+    </None>
+    <None Include="..\..\external\libnyquist\third_party\wavpack\src\unpack_x64.S">
+      <Filter>third_party\wavpack</Filter>
+    </None>
+    <None Include="..\..\external\libnyquist\third_party\wavpack\src\unpack_x86.asm">
+      <Filter>third_party\wavpack</Filter>
+    </None>
+    <None Include="..\..\external\libnyquist\third_party\wavpack\src\unpack_x86.S">
+      <Filter>third_party\wavpack</Filter>
+    </None>
+    <None Include="..\..\external\libnyquist\third_party\wavpack\src\pack_x64.asm">
+      <Filter>third_party\wavpack</Filter>
+    </None>
+    <None Include="..\..\external\libnyquist\third_party\wavpack\src\pack_x64.S">
+      <Filter>third_party\wavpack</Filter>
+    </None>
+    <None Include="..\..\external\libnyquist\third_party\wavpack\src\pack_x86.asm">
+      <Filter>third_party\wavpack</Filter>
+    </None>
+  </ItemGroup>
+</Project>

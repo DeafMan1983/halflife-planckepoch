@@ -13,24 +13,18 @@
 
 #include "SDL2/SDL.h"
 
+#include "libnyquist/Common.h"
+
 namespace FranAudio
 {
 	enum class ChannelType : unsigned int;
 
-	struct SoundSample
-	{
-		SDL_AudioSpec info;
-		Uint8* data;
-		Uint32 length;
-
-		ALenum format;
-		
-		SoundSample() : data(nullptr), length(0), format(0){};
-	};
+	//constexpr int defaultSampleRate = 22050; // 48000? 44100?
+	//constexpr int defaultChannelCount = 2;
 
 	class Sound
 	{
-	private:
+	protected:
 		ALuint sourceHandle;
 		ALint sourceState;
 		ALuint sourceBuffer;
@@ -53,6 +47,8 @@ namespace FranAudio
 
 		bool firstUpdate; // Will update for the first time?
 
+		virtual bool IsMusic() { return false; }; // Not muzak
+
 	public:
 		Sound();
 
@@ -71,6 +67,9 @@ namespace FranAudio
 		// For refreshing vars like position
 		void FRANAUDIO_API Update(cl_entity_t* _ent);
 
+		virtual bool PrecacheSoundSingle(std::string _dir) { return PrecacheSound(_dir); };
+		virtual nqr::AudioData& FindPrecachedSoundSingle(std::string _dir) { return FindPrecachedSound(_dir); };
+
 		void FRANAUDIO_API SetPaused(bool _pause, bool isMenu = false);
 
 		void SetVolume(float _volume);
@@ -79,7 +78,7 @@ namespace FranAudio
 
 		std::string GetDir();
 
-		void Kill();
+		bool Kill();
 
 		// Entity index of owner
 		int FRANAUDIO_API EntIndex();
@@ -90,10 +89,38 @@ namespace FranAudio
 
 		inline static FRANAUDIO_API FranUtils::FranVector<Sound> SoundsVector;
 
-		inline static std::map<std::string, SoundSample> SoundsMap;
+		inline static std::map<std::string, nqr::AudioData> SoundsMap;
 
-		inline static bool PrecacheSound(std::string _dir);
+		static void KillAllSounds();
+		
+		static bool PrecacheSound(std::string _dir);
 
-		inline static SoundSample FindPrecachedSound(std::string _dir);
+		static nqr::AudioData& FindPrecachedSound(std::string _dir);
+
+		static ALenum GetFormat(int _channels, nqr::PCMFormat _format);
 	};
+	/*
+	class Music : public Sound
+	{
+		virtual bool IsMusic() override { return true; }; // Yes muzak
+
+		void FRANAUDIO_API UpdateMusic(cl_entity_t* _ent) override;
+
+		virtual bool PrecacheSoundSingle(std::string _dir) override { return PrecacheMusic(_dir); };
+		virtual SoundSample FindPrecachedSoundSingle(std::string _dir) override { return FindPrecachedMusic(_dir); };
+
+		// ========
+		// Static Members
+		// ========
+
+		//inline static FRANAUDIO_API Music SoundsVector;
+
+		// TODO: We shouldn't keep all the used music cached.
+		inline static std::map<std::string, SoundSample> MusicMap; 
+
+		static bool PrecacheMusic(std::string _dir);
+
+		static SoundSample FindPrecachedMusic(std::string _dir);
+	};
+	*/
 };

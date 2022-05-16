@@ -767,6 +767,9 @@ void CHud::VidInit()
 	gMirrorManager.VidInit();
 	g_StudioRenderer.VidInit();
 	//RENDERERS_END
+
+	// Refresh sounds (not music)
+	FranAudio::Globals::Refresh();
 }
 
 bool CHud::MsgFunc_Logo(const char* pszName, int iSize, void* pbuf)

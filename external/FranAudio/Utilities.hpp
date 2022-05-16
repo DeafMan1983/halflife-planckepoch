@@ -10,5 +10,5 @@ namespace FranAudio::Utilities
 	const std::string& replace);
 
 	// Check if a file exists in mod dir or fallback dir.
-	std::string ReturnPlayableDir(std::string file);
+	std::string ReturnPlayableDir(std::string file, bool isMusic = false);
 };

@@ -21,7 +21,7 @@ std::string FranAudio::Utilities::ReplaceSubString(std::string subject, const st
 };
 
 // Check if a file exists in mod dir or fallback dir.
-std::string FranAudio::Utilities::ReturnPlayableDir(std::string file)
+std::string FranAudio::Utilities::ReturnPlayableDir(std::string file, bool isMusic)
 {
 	std::string temp;
 

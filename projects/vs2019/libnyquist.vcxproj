@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\external\libnyquist\src\Common.cpp" />
+    <ClCompile Include="..\..\external\libnyquist\src\Encoders.cpp" />
+    <ClCompile Include="..\..\external\libnyquist\src\FlacDecoder.cpp" />
+    <ClCompile Include="..\..\external\libnyquist\src\FlacDependencies.c" />
+    <ClCompile Include="..\..\external\libnyquist\src\Mp3Decoder.cpp" />
+    <ClCompile Include="..\..\external\libnyquist\src\MusepackDecoder.cpp" />
+    <ClCompile Include="..\..\external\libnyquist\src\MusepackDependencies.c" />
+    <ClCompile Include="..\..\external\libnyquist\src\OpusDecoder.cpp" />
+    <ClCompile Include="..\..\external\libnyquist\src\OpusDependencies.c" />
+    <ClCompile Include="..\..\external\libnyquist\src\VorbisDecoder.cpp" />
+    <ClCompile Include="..\..\external\libnyquist\src\VorbisDependencies.c" />
+    <ClCompile Include="..\..\external\libnyquist\src\WavDecoder.cpp" />
+    <ClCompile Include="..\..\external\libnyquist\src\WavPackDecoder.cpp" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\common_utils.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\decorr_utils.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\entropy_utils.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\extra1.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\extra2.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\open_filename.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\open_legacy.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\open_raw.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\open_utils.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\pack.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\pack_dns.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\pack_dsd.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\pack_floats.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\pack_utils.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\read_words.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\tags.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\tag_utils.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\unpack.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\unpack3.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\unpack3_open.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\unpack3_seek.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\unpack_dsd.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\unpack_floats.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\unpack_seek.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\unpack_utils.c" />
+    <ClCompile Include="..\..\external\libnyquist\third_party\wavpack\src\write_words.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\external\libnyquist\include\libnyquist\Common.h" />
+    <ClInclude Include="..\..\external\libnyquist\include\libnyquist\Decoders.h" />
+    <ClInclude Include="..\..\external\libnyquist\include\libnyquist\Encoders.h" />
+    <ClInclude Include="..\..\external\libnyquist\third_party\wavpack\src\decorr_tables.h" />
+    <ClInclude Include="..\..\external\libnyquist\third_party\wavpack\src\unpack3.h" />
+    <ClInclude Include="..\..\external\libnyquist\third_party\wavpack\src\wavpack_local.h" />
+    <ClInclude Include="..\..\external\libnyquist\third_party\wavpack\src\wavpack_version.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\external\libnyquist\third_party\wavpack\src\pack_x64.asm" />
+    <None Include="..\..\external\libnyquist\third_party\wavpack\src\pack_x64.S" />
+    <None Include="..\..\external\libnyquist\third_party\wavpack\src\pack_x86.asm" />
+    <None Include="..\..\external\libnyquist\third_party\wavpack\src\pack_x86.S" />
+    <None Include="..\..\external\libnyquist\third_party\wavpack\src\unpack_x64.asm" />
+    <None Include="..\..\external\libnyquist\third_party\wavpack\src\unpack_x64.S" />
+    <None Include="..\..\external\libnyquist\third_party\wavpack\src\unpack_x86.asm" />
+    <None Include="..\..\external\libnyquist\third_party\wavpack\src\unpack_x86.S" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{0735A88F-C427-44DA-AFAC-A812D62FB8A8}</ProjectGuid>
+    <RootNamespace>libnyquist</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(Configuration)\$(ProjectName)\int\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(Configuration)\$(ProjectName)\int\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>
+      </SDLCheck>
+      <PreprocessorDefinitions>OPUS_BUILD;USE_ALLOCA;FLAC_API_EXPORTS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>Default</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>..\..\external\libnyquist\include;..\..\external\libnyquist\include\libnyquist;..\..\external\libnyquist\third_party\opus\opusfile\src\include;..\..\external\libnyquist\third_party\opus\opusfile\include;..\..\external\libnyquist\third_party\opus\libopus\include;..\..\external\libnyquist\third_party\opus\silk\float;..\..\external\libnyquist\third_party\opus\silk;..\..\external\libnyquist\third_party\opus\celt;..\..\external\libnyquist\third_party\wavpack\include;..\..\external\libnyquist\third_party\musepack\include;..\..\external\libnyquist\third_party\libvorbis\include;..\..\external\libnyquist\third_party\libogg\include;..\..\external\libnyquist\third_party\FLAC\src\include;..\..\external\libnyquist\third_party;..\..\external;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/NODEFAULTLIB:library %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <PostBuildEvent>
+      <Command>cd /D "$(ProjectDir)..\.."
+cmd /c copy-libnyquist.bat
+EXIT /B 0</Command>
+      <Message>Execute copy-libnyquist.bat</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>OPUS_BUILD;USE_ALLOCA;FLAC_API_EXPORTS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;WIN32;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>Default</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>..\..\external\libnyquist\include;..\..\external\libnyquist\include\libnyquist;..\..\external\libnyquist\third_party\opus\opusfile\src\include;..\..\external\libnyquist\third_party\opus\opusfile\include;..\..\external\libnyquist\third_party\opus\libopus\include;..\..\external\libnyquist\third_party\opus\silk\float;..\..\external\libnyquist\third_party\opus\silk;..\..\external\libnyquist\third_party\opus\celt;..\..\external\libnyquist\third_party\wavpack\include;..\..\external\libnyquist\third_party\musepack\include;..\..\external\libnyquist\third_party\libvorbis\include;..\..\external\libnyquist\third_party\libogg\include;..\..\external\libnyquist\third_party\FLAC\src\include;..\..\external\libnyquist\third_party;..\..\external;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
