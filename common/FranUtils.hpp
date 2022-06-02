@@ -410,7 +410,7 @@ namespace FranUtils
 	 * @param _flags : Sound Flags
 	 * @param _pitch : Pitch
 	 */
-	inline void EmitSound(entvars_t* _entity, int _channel, const char* _sample, float _volume, float _attenuation, int _flags, int _pitch)
+	inline void EmitSound(entvars_t* _entity, int _channel, const char* _sample, float _volume, float _attenuation, int _flags, int _pitch, int _spawnflags = 0)
 	{
 #if defined(ENGINECALLBACK_H) && !defined(CLIENT_DLL)
 		MESSAGE_BEGIN(MSG_PVS, gmsgCreateSound, _entity->origin);
@@ -421,6 +421,7 @@ namespace FranUtils
 			WRITE_LONG(ftol_asm(_attenuation));
 			WRITE_LONG(_flags);
 			WRITE_LONG(_pitch);
+			WRITE_LONG(_spawnflags);
 		MESSAGE_END();
 #endif
 	}

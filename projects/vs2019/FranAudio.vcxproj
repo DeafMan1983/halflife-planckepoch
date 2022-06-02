@@ -13,9 +13,11 @@
   <ItemGroup>
     <ClInclude Include="..\..\external\FranAudio\ALWrappers.hpp" />
     <ClInclude Include="..\..\external\FranAudio\Channel.hpp" />
+    <ClInclude Include="..\..\external\FranAudio\ConversionUtils.hpp" />
     <ClInclude Include="..\..\external\FranAudio\FranAudio.hpp" />
     <ClInclude Include="..\..\external\FranAudio\FranAudioAPI.hpp" />
     <ClInclude Include="..\..\external\FranAudio\FranVector.hpp" />
+    <ClInclude Include="..\..\external\FranAudio\Music.hpp" />
     <ClInclude Include="..\..\external\FranAudio\Sound.hpp" />
     <ClInclude Include="..\..\external\FranAudio\Utilities.hpp" />
   </ItemGroup>
@@ -23,7 +25,9 @@
     <ClCompile Include="..\..\cl_dll\hl\hl_baseentity.cpp" />
     <ClCompile Include="..\..\external\FranAudio\ALWrappers.cpp" />
     <ClCompile Include="..\..\external\FranAudio\Channel.cpp" />
+    <ClCompile Include="..\..\external\FranAudio\ConversionUtils.cpp" />
     <ClCompile Include="..\..\external\FranAudio\FranAudio.cpp" />
+    <ClCompile Include="..\..\external\FranAudio\Music.cpp" />
     <ClCompile Include="..\..\external\FranAudio\Sound.cpp" />
     <ClCompile Include="..\..\external\FranAudio\Utilities.cpp" />
   </ItemGroup>

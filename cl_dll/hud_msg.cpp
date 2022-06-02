@@ -15,7 +15,7 @@
 //
 //  hud_msg.cpp
 //
-#include "mp3.h" //AJH - Killar MP3
+
 #include "hud.h"
 #include "cl_util.h"
 #include "parsemsg.h"
@@ -24,6 +24,7 @@
 
 #include "FranAudio/FranAudio.hpp"
 #include "FranAudio/Sound.hpp"
+#include "FranAudio/Music.hpp"
 
 //RENDERERS START
 #include "bsprenderer.h"
@@ -254,7 +255,7 @@ bool CHud ::MsgFunc_PlayMP3(const char* pszName, int iSize, void* pbuf) //AJH -K
 {
 	BEGIN_READ(pbuf, iSize);
 
-	gMP3.PlayMP3(READ_STRING());
+	FranAudio::Music::PlayMusic(READ_STRING(), CVAR_GET_FLOAT("mp3volume"));
 
 	return true;
 }
@@ -395,8 +396,9 @@ int CHud::MsgFunc_CreateSound(const char* pszName, int iSize, void* pbuf)
 		float _attenuation = READ_FLOAT(); // FTOL
 		int _flags = READ_LONG();
 		int _pitch = READ_LONG();
+		int _spawnflag = READ_LONG();
 
-	FranAudio::EmitSound(_entindex, _channel, _sample, _volume, _attenuation, _flags, _pitch);
+	FranAudio::EmitSound(_entindex, _channel, _sample, _volume, _attenuation, _flags, _pitch, _spawnflag);
 	return 1;
 }
 

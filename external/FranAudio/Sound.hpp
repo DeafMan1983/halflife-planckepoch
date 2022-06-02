@@ -29,7 +29,7 @@ namespace FranAudio
 		ALint sourceState;
 		ALuint sourceBuffer;
 
-		uint8_t* tempSoundBuffer;
+		uint8_t* mouthSoundBuffer; // For mouth AND as 8-bit buffer use
 
 		// Half Life Sound Data Structure
 
@@ -49,8 +49,6 @@ namespace FranAudio
 
 		bool firstUpdate; // Will update for the first time?
 
-		virtual bool IsMusic() { return false; }; // Not muzak
-
 	public:
 		Sound();
 
@@ -63,6 +61,18 @@ namespace FranAudio
 			float _attenuation,
 			int _flags,
 			int _pitch);
+
+		/*
+		// Sentence Constructor
+		Sound(int _entityIndex,
+			int _channel,
+			const char** _samples,
+			size_t _ssampleCount,
+			float _volume,
+			float _attenuation,
+			int _flags,
+			int _pitch);
+		*/
 
 		bool operator==(const Sound& _other);
 
@@ -99,30 +109,8 @@ namespace FranAudio
 
 		static nqr::AudioData& FindPrecachedSound(std::string _dir);
 
-		static ALenum GetFormat(int _channels, nqr::PCMFormat _format);
+		static ALenum GetFormat(int _channels, bool _isDouble = false);
+
+		static ALenum GetComplexFormat(int _channels, nqr::PCMFormat _format);
 	};
-	/*
-	class Music : public Sound
-	{
-		virtual bool IsMusic() override { return true; }; // Yes muzak
-
-		void FRANAUDIO_API UpdateMusic(cl_entity_t* _ent) override;
-
-		virtual bool PrecacheSoundSingle(std::string _dir) override { return PrecacheMusic(_dir); };
-		virtual SoundSample FindPrecachedSoundSingle(std::string _dir) override { return FindPrecachedMusic(_dir); };
-
-		// ========
-		// Static Members
-		// ========
-
-		//inline static FRANAUDIO_API Music SoundsVector;
-
-		// TODO: We shouldn't keep all the used music cached.
-		inline static std::map<std::string, SoundSample> MusicMap; 
-
-		static bool PrecacheMusic(std::string _dir);
-
-		static SoundSample FindPrecachedMusic(std::string _dir);
-	};
-	*/
 };

@@ -26,7 +26,7 @@ namespace FranUtils
 		// Operators
 		// ==========
 
-		_T& operator[](size_t _index) const;
+		_T& operator[](size_t _index); // const;
 
 		void operator=(const FranVector<_T>& _other);
 
@@ -149,11 +149,14 @@ FranUtils::FranVector<_T>::~FranVector()
 }
 
 template <class _T>
-_T& FranUtils::FranVector<_T>::operator[](size_t _index) const
+_T& FranUtils::FranVector<_T>::operator[](size_t _index) //const
 {
 	if (_index >= baseArraySize)
-		throw std::out_of_range("Subscript: Out Of Range!!");
-
+	// throw std::out_of_range("Subscript: Out Of Range!!");
+	{
+		Resize(_index);
+	}
+		
 	return baseArrayData[_index];
 }
 
@@ -237,7 +240,7 @@ template <class _T>
 void FranUtils::FranVector<_T>::PopIndex(size_t _index)
 {
 	if (baseArraySize < 1 || _index >= baseArraySize)
-		throw std::out_of_range("PopIndex: Out Of Range!!");
+		return; // throw std::out_of_range("PopIndex: Out Of Range!!");
 
 	_T* tempArray = new _T[baseArraySize - 1];
 

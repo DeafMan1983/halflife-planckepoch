@@ -52,9 +52,9 @@ static int tracerCount[MAX_PLAYERS];
 void V_PunchAxis(int axis, float punch);
 void VectorAngles(const float* forward, float* angles);
 
-void HLDM_EmitSound(int ent, float* origin, int channel, const char* sample, float volume, float attenuation, int fFlags, int pitch)
+void HLDM_EmitSound(int ent, float* origin, int channel, const char* sample, float volume, float attenuation, int fFlags, int pitch, int spawnflag = 0)
 {
-	FranAudio::EmitSound(ent, channel, sample, volume, attenuation, fFlags, pitch);
+	FranAudio::EmitSound(ent, channel, sample, volume, attenuation, fFlags, pitch, spawnflag);
 }
 
 extern cvar_t* cl_lw;

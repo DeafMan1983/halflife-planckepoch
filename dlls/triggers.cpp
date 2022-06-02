@@ -3128,6 +3128,40 @@ public:
 	void Use(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, float value) override;
 	void PlayTrack();
 	void Touch(CBaseEntity* pOther) override;
+
+	inline static std::map<unsigned int, const char*> soundMap = 
+	{
+			{-1,	""						},
+			{0,		""						},
+			{1,		""						},
+			{2,		"media/Half-Life01.mp3"	},
+			{3,		"media/Prospero01.mp3"	},
+			{4,		"media/Half-Life12.mp3"	},
+			{5,		"media/Half-Life07.mp3"	},
+			{6,		"media/Half-Life10.mp3"	},
+			{7,		"media/Suspense01.mp3"	},
+			{8,		"media/Suspense03.mp3"	},
+			{9,		"media/Half-Life09.mp3"	},
+			{10,	"media/Half-Life02.mp3"	},
+			{11,	"media/Half-Life13.mp3"	},
+			{12,	"media/Half-Life04.mp3"	},
+			{13,	"media/Half-Life15.mp3"	},
+			{14,	"media/Half-Life14.mp3"	},
+			{15,	"media/Half-Life16.mp3"	},
+			{16,	"media/Suspense02.mp3"	},
+			{17,	"media/Half-Life03.mp3"	},
+			{18,	"media/Half-Life08.mp3"	},
+			{19,	"media/Prospero02.mp3"	},
+			{20,	"media/Half-Life05.mp3"	},
+			{21,	"media/Prospero04.mp3"	},
+			{22,	"media/Half-Life11.mp3"	},
+			{23,	"media/Half-Life06.mp3"	},
+			{24,	"media/Prospero03.mp3"	},
+			{25,	"media/Half-Life17.mp3"	},
+			{26,	"media/Prospero05.mp3"	},
+			{27,	"media/Suspense05.mp3"	},
+			{28,	"media/Suspense07.mp3"	},
+	};
 };
 
 LINK_ENTITY_TO_CLASS(trigger_cdaudio, CTriggerCDAudio);
@@ -3183,10 +3217,17 @@ void PlayCDTrack(int iTrack, int iSong)
 		char string[64];
 
 		if (iSong)
+		{
 			sprintf(string, "playaudio %s\n", STRING(iSong));
+			CLIENT_COMMAND(pClient, string);
+		}
 		else
-			sprintf(string, "cd play %3d\n", iTrack);
-		CLIENT_COMMAND(pClient, string);
+		{
+			sprintf(string, "playaudio %s\n", CTriggerCDAudio::soundMap[iTrack]);
+			CLIENT_COMMAND(pClient, string);
+			//sprintf(string, "cd play %3d\n", iTrack);
+			//CLIENT_COMMAND(pClient, string);
+		}
 	}
 }
 

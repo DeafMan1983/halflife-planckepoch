@@ -34,7 +34,8 @@
 #include "FranUtils.hpp"
 
 #include "FranAudio/FranAudio.hpp"
-#include "FranAudio/Channel.hpp"
+#include "FranAudio/Sound.hpp"
+#include "FranAudio/Music.hpp"
 
 SDL_Window* mainWindow;
 SDL_GLContext mainContext;
@@ -55,6 +56,8 @@ void ClientImGui_HookedDraw()
 		FranUtils::Globals::called3DMainMenu = false;
 	}
 
+	if (FranAudio::Music::CurrentMusic != nullptr)
+		FranAudio::Music::CurrentMusic->SetPaused(FranUtils::Globals::isPaused, true);
 
 	for (auto& sound : FranAudio::Sound::SoundsVector)
 	{

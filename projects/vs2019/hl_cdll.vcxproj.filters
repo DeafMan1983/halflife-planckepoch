@@ -309,9 +309,6 @@
     <ClCompile Include="..\..\pm_shared\pm_shared.cpp">
       <Filter>Source Files\pm_shared</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cl_dll\mp3.cpp">
-      <Filter>Source Files\cl_dll</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\cl_dll\CustomMenu.cpp">
       <Filter>Source Files\cl_dll</Filter>
     </ClCompile>
@@ -637,9 +634,6 @@
     </ClInclude>
     <ClInclude Include="..\..\engine\progs.h">
       <Filter>Header Files\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cl_dll\mp3.h">
-      <Filter>Header Files\cl_dll</Filter>
     </ClInclude>
     <ClInclude Include="..\..\common\common_types.h">
       <Filter>Header Files\common</Filter>

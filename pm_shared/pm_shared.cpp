@@ -180,7 +180,7 @@ std::vector<impactGroupType_s> g_texTypeImpactTypeVector;
 void PM_EmitSound(int channel, const char* sample, float volume, float attenuation, int fFlags, int pitch)
 {
 #ifdef CLIENT_DLL
-	FranAudio::EmitSound(pmove->player_index + 1, CHAN_BODY, sample, volume * 0.8 /*Footsteps are a bit quiet*/, attenuation, fFlags, pitch);
+	FranAudio::EmitSound(pmove->player_index + 1, CHAN_BODY, sample, volume * 0.8 /*Footsteps are a bit quiet*/, attenuation, fFlags, pitch, FranAudio::SoundSpawnFlags::NoMouthMovement);
 #endif // CLIENT_DLL
 }
 

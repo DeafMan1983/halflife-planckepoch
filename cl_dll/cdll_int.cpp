@@ -23,7 +23,6 @@
 #include "netadr.h"
 #include "interface.h"
 //#include "vgui_schememanager.h"
-#include "mp3.h" //AJH - Killars MP3player
 
 #include "pm_shared.h"
 
@@ -58,7 +57,6 @@ extern engine_studio_api_t IEngineStudio;
 
 cl_enginefunc_t gEngfuncs;
 CHud gHUD;
-CMP3 gMP3; //AJH - Killars MP3player
 TeamFortressViewport* gViewPort = nullptr;
 
 //RENDERERS START

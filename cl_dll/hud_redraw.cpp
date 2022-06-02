@@ -26,7 +26,8 @@
 #include "FranUtils.hpp"
 
 #include "FranAudio/FranAudio.hpp"
-#include "FranAudio/Channel.hpp"
+#include "FranAudio/Sound.hpp"
+#include "FranAudio/Music.hpp"
 
 #define MAX_LOGO_FRAMES 56
 
@@ -123,6 +124,9 @@ bool CHud::Redraw(float flTime, bool intermission)
 		// Moved to imgui hookeddraw
 		//sound.SetPaused(FranUtils::Globals::isPaused, true);
 	}
+
+	if (FranAudio::Music::CurrentMusic != nullptr)
+		FranAudio::Music::CurrentMusic->Update(gEngfuncs.pfnGetCvarFloat("mp3volume"));
 
 	m_fOldTime = m_flTime;	// save time of previous redraw
 	m_flTime = flTime;

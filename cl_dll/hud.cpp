@@ -30,7 +30,6 @@
 #include "parsemsg.h"
 #include "vgui_int.h"
 #include "vgui_TeamFortressViewport.h"
-#include "mp3.h"
 #include "demo.h"
 #include "demo_api.h"
 #include "vgui_ScorePanel.h"
@@ -52,6 +51,7 @@ extra_player_info_t g_PlayerExtraInfo[MAX_PLAYERS_HUD + 1]; // additional player
 #include "FranUtils.hpp"
 
 #include "FranAudio/FranAudio.hpp"
+#include "FranAudio/Music.hpp"
 
 #include "studio.h"
 #include "StudioModelRenderer.h"
@@ -237,7 +237,7 @@ void __CmdFunc_ForceCloseCommandMenu()
 
 void __CmdFunc_StopMP3( )
 {
-	gMP3.StopMP3();
+	FranAudio::Music::StopMusic();
 }
 
 // TFFree Command Menu Message Handlers
@@ -436,12 +436,9 @@ void CHud::Init()
 	HOOK_MESSAGE(Inventory);   //AJH Inventory system
 	HOOK_MESSAGE(ClampView);   //LRC 1.8
 
-	//KILLAR: MP3
-	if (gMP3.Initialize())
-	{
-		HOOK_MESSAGE(PlayMP3);
-		HOOK_COMMAND("stopaudio", StopMP3);
-	}
+
+	HOOK_MESSAGE(PlayMP3);
+	HOOK_COMMAND("stopaudio", StopMP3);
 
 	// TFFree CommandMenu
 	HOOK_COMMAND("+commandmenu", OpenCommandMenu);
@@ -564,7 +561,12 @@ void CHud::Init()
 
 	m_clImgui.Init();
 
-	FranAudio::Globals::Init(FranUtils::GetModDirectory("\\sound\\").c_str(), (std::filesystem::current_path().string() + "\\" + FranUtils::Globals::GetFallbackDir() + "\\sound\\").c_str());
+	FranAudio::Globals::Init(
+		FranUtils::GetModDirectory("\\sound\\").c_str(),
+		(std::filesystem::current_path().string() + "\\" + FranUtils::Globals::GetFallbackDir() + "\\sound\\").c_str(),
+		FranUtils::GetModDirectory().c_str(),
+		(std::filesystem::current_path().string() + "\\" + FranUtils::Globals::GetFallbackDir() + "\\").c_str()
+	);
 
 	m_Menu.Init();
 
@@ -581,7 +583,6 @@ CHud::~CHud()
 	delete[] m_rghSprites;
 	delete[] m_rgrcRects;
 	delete[] m_rgszSpriteNames;
-	gMP3.Shutdown();
 
 	if (m_pHudList)
 	{

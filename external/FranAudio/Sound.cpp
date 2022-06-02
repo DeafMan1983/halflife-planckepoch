@@ -6,6 +6,7 @@
 
 #include "Utilities.hpp"
 #include "ALWrappers.hpp"
+#include "ConversionUtils.hpp"
 
 #include "libnyquist/Decoders.h"
 
@@ -21,21 +22,21 @@ FranAudio::Sound::Sound()
 	flags(0),
 	pitch(0),
 	firstUpdate(true),
-	tempSoundBuffer(nullptr)
+	mouthSoundBuffer(nullptr)
 {
-	tempSoundBuffer = nullptr;
+
 }
 
 FranAudio::Sound::Sound(int _entityIndex, int _channel, const char* _sample, float _volume, float _attenuation, int _flags, int _pitch) 
 	: entity(_entityIndex), 
 	channelType((ChannelType)_channel), 
-	sampleDir(FranAudio::Utilities::ReturnPlayableDir(_sample, IsMusic())), 
+	sampleDir(FranAudio::Utilities::ReturnPlayableDir(_sample, false)), 
 	volume(_volume), 
 	attenuation(_attenuation), 
 	flags(_flags), 
 	pitch(_pitch),
 	firstUpdate(true),
-	tempSoundBuffer(nullptr)
+	mouthSoundBuffer(nullptr)
 {
 
 	if (sampleDir == "ERR")
@@ -54,22 +55,20 @@ FranAudio::Sound::Sound(int _entityIndex, int _channel, const char* _sample, flo
 
 	FranAudio::Globals::LogMessage(std::string(std::string("Trying to play sample: ") + "\"" + sampleDir + "\"" + " - " + std::to_string(sound.lengthSeconds) + " | " + std::to_string(sound.channelCount) + " | " + std::to_string(sound.sampleRate) + " | " + std::to_string(sound.samples.size())).c_str());
 
-	tempSoundBuffer = new uint8_t[sound.samples.size()];
-
-	nqr::ConvertFromFloat32(tempSoundBuffer, sound.samples.data(), sound.samples.size(), sound.sourceFormat, nqr::DITHER_NONE);
+	mouthSoundBuffer = nullptr;
+	mouthSoundBuffer = new uint8_t[sound.samples.size()];
+	FranAudio::ConversionUtils::Resample_32to8(sound.samples.data(), mouthSoundBuffer, sound.samples.size());
 
 	FranAudio_AlFunction(alGenBuffers, 1, &sourceBuffer);
-	FranAudio_AlFunction(alBufferData, sourceBuffer, GetFormat(sound.channelCount, sound.sourceFormat), tempSoundBuffer, sound.samples.size(), sound.sampleRate);
+	//FranAudio_AlFunction(alBufferData, sourceBuffer, GetFormat(sound.channelCount, sound.sourceFormat), mouthSoundBuffer, sound.samples.size(), sound.sampleRate);
+	FranAudio_AlFunction(alBufferData, sourceBuffer, FranAudio::Sound::GetFormat(sound.channelCount), sound.samples.data(), sound.samples.size() * 4 /* Float is 4x size of 8 bit int */, sound.sampleRate);
 
-	// This will be used for mouths later. Delete in kill function OR destructor.
-	//delete[] tempSoundBuffer; 
-	//tempSoundBuffer = nullptr;
 	
 	FranAudio_AlFunction(alGenSources, 1, &sourceHandle);
 	FranAudio_AlFunction(alSourcef, sourceHandle, AL_PITCH, 1);
 	FranAudio_AlFunction(alSourcef, sourceHandle, AL_GAIN, volume);
 
-	FranAudio_AlFunction(alSourcei, sourceHandle, AL_SOURCE_RELATIVE, IsMusic());
+	FranAudio_AlFunction(alSourcei, sourceHandle, AL_SOURCE_RELATIVE, false);
 	
 	FranAudio_AlFunction(alSourcefv, sourceHandle, AL_POSITION, Vector{0, 0, 0});
 	FranAudio_AlFunction(alSourcefv, sourceHandle, AL_VELOCITY, Vector{0, 0, 0});
@@ -112,7 +111,7 @@ bool FranAudio::Sound::operator==(const Sound& _other)
 
 void FRANAUDIO_API FranAudio::Sound::Update(cl_entity_t* _ent)
 {
-	if (sourceState == AL_STOPPED)
+	if (_ent != nullptr && sourceState == AL_STOPPED)
 		_ent->mouth.mouthopen = 0;
 
 	if (sampleDir == "ERR" || _ent == nullptr || sourceState == AL_STOPPED)
@@ -133,7 +132,7 @@ void FRANAUDIO_API FranAudio::Sound::Update(cl_entity_t* _ent)
 
 	FranAudio_AlFunction(alSourcefv, sourceHandle, AL_POSITION, _ent->origin);
 	
-	if (tempSoundBuffer == nullptr)
+	if (mouthSoundBuffer == nullptr)
 	{
 		_ent->mouth.mouthopen = 0;
 		return;
@@ -142,9 +141,9 @@ void FRANAUDIO_API FranAudio::Sound::Update(cl_entity_t* _ent)
 	ALint sampleOffset;
 	FranAudio_AlFunction(alGetSourcei, sourceHandle, AL_SAMPLE_OFFSET, &sampleOffset);
 
-	auto& sound = FindPrecachedSoundSingle(sampleDir);;
+	//auto& sound = FindPrecachedSoundSingle(sampleDir);
 
-	_ent->mouth.mouthopen = tempSoundBuffer[sampleOffset];
+	_ent->mouth.mouthopen = mouthSoundBuffer[sampleOffset] / 3;
 
 	//if (_ent->model)
 		//sampleHandle.setRadius(_ent->model->radius);
@@ -155,14 +154,23 @@ void FRANAUDIO_API FranAudio::Sound::SetPaused(bool _pause, bool isMenu)
 	if (sampleDir == "ERR")
 		return;
 
+	FranAudio_AlFunction(alGetSourcei, sourceHandle, AL_SOURCE_STATE, &sourceState);
+
 	if (isMenu)
 	{
 		isPausedByPauseMenu = _pause;
-		//_pause ? audioSource.pause() : audioSource.resume();
+
+		if (_pause)
+			FranAudio_AlFunction(alSourcePause, sourceHandle);
+		else if (sourceState == AL_PAUSED)
+			FranAudio_AlFunction(alSourcePlay, sourceHandle);
 	}
 	else if (!isPausedByPauseMenu)
 	{
-		//_pause ? audioSource.pause() : audioSource.resume();
+		if (_pause)
+			FranAudio_AlFunction(alSourcePause, sourceHandle);
+		else if(sourceState == AL_PAUSED)
+			FranAudio_AlFunction(alSourcePlay, sourceHandle);
 	}
 }
 
@@ -200,8 +208,8 @@ bool FranAudio::Sound::Kill()
 		}
 	}
 
-	if (tempSoundBuffer != nullptr)
-		delete[] tempSoundBuffer;
+	if (mouthSoundBuffer != nullptr)
+		delete[] mouthSoundBuffer;
 
 	FranAudio_AlFunction(alSourceStop, sourceHandle);
 	FranAudio_AlFunction(alDeleteSources, 1, &sourceHandle);
@@ -230,11 +238,16 @@ int FRANAUDIO_API FranAudio::Sound::EntIndex()
 
 void FranAudio::Sound::KillAllSounds()
 {
-	size_t startsize = SoundsVector.Size();
-	for (int i = 0; i < startsize; i++)
+	while (SoundsVector.Size() > 0)
 	{
-		if (SoundsVector[i].Kill() == false) // Couldn't kill for some reason
-			return;
+		size_t beginsize = SoundsVector.Size();
+		for (int i = 0; i < beginsize; i++)
+		{
+			if (beginsize > SoundsVector.Size())
+				break;
+
+			SoundsVector[i].Kill();
+		}
 	}
 }
 
@@ -256,16 +269,6 @@ inline bool FranAudio::Sound::PrecacheSound(std::string _dir)
 
 		FranAudio::Globals::LogMessage(std::string(std::string("Loaded: ") + "\"" + _dir.c_str() + "\"" + " - " + std::to_string(_sample.lengthSeconds) + " | " + std::to_string(_sample.channelCount) + " | " + std::to_string(_sample.sampleRate) + " | " + std::to_string(_sample.samples.size())).c_str());
 
-		/*
-		if (_sample.info.channels == 1 && SDL_AUDIO_BITSIZE(_sample.info.format) == 8)
-			_sample.format = AL_FORMAT_MONO8;
-		else if (_sample.info.channels == 1 && SDL_AUDIO_BITSIZE(_sample.info.format) == 16)
-			_sample.format = AL_FORMAT_MONO16;
-		else if (_sample.info.channels == 2 && SDL_AUDIO_BITSIZE(_sample.info.format) == 8)
-			_sample.format = AL_FORMAT_STEREO8;
-		else if (_sample.info.channels == 2 && SDL_AUDIO_BITSIZE(_sample.info.format) == 16)
-			_sample.format = AL_FORMAT_STEREO16;
-		*/
 		SoundsMap.insert({_dir, _sample});
 	}
 	
@@ -284,8 +287,21 @@ inline nqr::AudioData& FranAudio::Sound::FindPrecachedSound(std::string _dir)
 	}
 }
 
+ALenum FranAudio::Sound::GetFormat(int _channels, bool _isDouble)
+{
+	if (FranAudio::Globals::IsFloatFormatSupported() && _channels == 1 && !_isDouble)
+		return AL_FORMAT_MONO_FLOAT32;
+	else if (FranAudio::Globals::IsFloatFormatSupported() && _channels == 2 && !_isDouble)
+		return AL_FORMAT_STEREO_FLOAT32;
+	else if (FranAudio::Globals::IsDoubleFormatSupported() && _channels == 1 && _isDouble)
+		return AL_FORMAT_MONO_DOUBLE_EXT;
+	else if (FranAudio::Globals::IsDoubleFormatSupported() && _channels == 2 && _isDouble)
+		return AL_FORMAT_STEREO_DOUBLE_EXT;
+	else
+		return 0;
+}
 
-ALenum FranAudio::Sound::GetFormat(int _channels, nqr::PCMFormat _format)
+ALenum FranAudio::Sound::GetComplexFormat(int _channels, nqr::PCMFormat _format)
 {
 	if (_channels == 1 && _format == nqr::PCMFormat::PCM_U8)
 		return AL_FORMAT_MONO8;
@@ -295,76 +311,15 @@ ALenum FranAudio::Sound::GetFormat(int _channels, nqr::PCMFormat _format)
 		return AL_FORMAT_STEREO8;
 	else if (_channels == 2 && _format == nqr::PCMFormat::PCM_16)
 		return AL_FORMAT_STEREO16;
+	else if (FranAudio::Globals::IsFloatFormatSupported() && _channels == 1 && _format == nqr::PCMFormat::PCM_FLT)
+		return AL_FORMAT_MONO_FLOAT32;
+	else if (FranAudio::Globals::IsFloatFormatSupported() && _channels == 2 && _format == nqr::PCMFormat::PCM_FLT)
+		return AL_FORMAT_STEREO_FLOAT32;
+	else if (FranAudio::Globals::IsDoubleFormatSupported() && _channels == 1 && _format == nqr::PCMFormat::PCM_DBL)
+		return AL_FORMAT_MONO_DOUBLE_EXT;
+	else if (FranAudio::Globals::IsDoubleFormatSupported() && _channels == 2 && _format == nqr::PCMFormat::PCM_DBL)
+		return AL_FORMAT_STEREO_DOUBLE_EXT;
 	else
 		return 0;
 }
 
-// ===========
-// Music
-// ===========
-/*
-void FRANAUDIO_API FranAudio::Music::Update(cl_entity_t* _ent)
-{
-	if (sampleDir == "ERR" || _ent == nullptr || sourceState == AL_STOPPED)
-	{
-		Kill();
-		return;
-	}
-
-	if (firstUpdate)
-	{
-		firstUpdate = false;
-	}
-
-	FranAudio_AlFunction(alGetSourcei, sourceHandle, AL_SOURCE_STATE, &sourceState);
-
-	//FranAudio_AlFunction(alSourcefv, sourceHandle, AL_POSITION, _ent->origin);
-
-	FranAudio_AlFunction(alSourcefv, sourceHandle, AL_POSITION, Vector(0,0,0));
-
-	// if (_ent->model)
-	// sampleHandle.setRadius(_ent->model->radius);
-}
-
-bool FranAudio::Music::PrecacheMusic(std::string _dir)
-{
-	if (SoundsMap.find(_dir) == SoundsMap.end())
-	{
-		FranAudio::Globals::LogMessage(std::string(std::string("Trying to load ") + "\"" + _dir.c_str() + "\"").c_str());
-
-		SoundSample _sample{};
-
-		if (SDL_LoadWAV(_dir.c_str(), &_sample.info, &_sample.data, &_sample.length) == NULL)
-		{
-			FranAudio::Globals::LogMessage(std::string(std::string("Error loading sound: ") + "\"" + _dir.c_str() + "\"").c_str());
-			return false;
-		}
-
-		if (_channels == 1 && SDL_AUDIO_BITSIZE(_sample.info.format) == 8)
-			_sample.format = AL_FORMAT_MONO8;
-		else if (_channels == 1 && SDL_AUDIO_BITSIZE(_sample.info.format) == 16)
-			_sample.format = AL_FORMAT_MONO16;
-		else if (_channels == 2 && SDL_AUDIO_BITSIZE(_sample.info.format) == 8)
-			_sample.format = AL_FORMAT_STEREO8;
-		else if (_channels == 2 && SDL_AUDIO_BITSIZE(_sample.info.format) == 16)
-			_sample.format = AL_FORMAT_STEREO16;
-
-		SoundsMap.insert({_dir, _sample});
-	}
-
-	return true;
-}
-
-FranAudio::SoundSample FranAudio::Music::FindPrecachedMusic(std::string _dir)
-{
-	if (SoundsMap.find(_dir) == SoundsMap.end())
-	{
-		return SoundSample(); // Return empty sound sample
-	}
-	else
-	{
-		return SoundsMap.at(_dir);
-	}
-}
-
-*/

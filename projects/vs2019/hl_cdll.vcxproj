@@ -158,7 +158,6 @@ EXIT /B 0</Command>
     <ClCompile Include="..\..\cl_dll\menu.cpp" />
     <ClCompile Include="..\..\cl_dll\message.cpp" />
     <ClCompile Include="..\..\cl_dll\mirrormanager.cpp" />
-    <ClCompile Include="..\..\cl_dll\mp3.cpp" />
     <ClCompile Include="..\..\cl_dll\particle_engine.cpp" />
     <ClCompile Include="..\..\cl_dll\postprocess.cpp" />
     <ClCompile Include="..\..\cl_dll\propmanager.cpp" />
@@ -252,7 +251,6 @@ EXIT /B 0</Command>
     <ClInclude Include="..\..\cl_dll\in_defs.h" />
     <ClInclude Include="..\..\cl_dll\kbutton.h" />
     <ClInclude Include="..\..\cl_dll\mirrormanager.h" />
-    <ClInclude Include="..\..\cl_dll\mp3.h" />
     <ClInclude Include="..\..\cl_dll\particle_engine.h" />
     <ClInclude Include="..\..\cl_dll\postprocess.h" />
     <ClInclude Include="..\..\cl_dll\propmanager.h" />

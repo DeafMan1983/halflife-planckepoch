@@ -28,11 +28,23 @@ std::string FranAudio::Utilities::ReturnPlayableDir(std::string file, bool isMus
 	// Fix old paths like "barney/ambush"
 	file = ReplaceSubString(file, "/", "\\");
 
-	if (std::filesystem::exists(temp = (FranAudio::Globals::GetModSoundDir() + file)))
-		return temp; // Mod dir file
-	else if (std::filesystem::exists(temp = (FranAudio::Globals::GetFallbackSoundDir() + file)))
-		return temp; // Fallback dir file
+	if (!isMusic)
+	{
+		if (std::filesystem::exists(temp = (FranAudio::Globals::GetModSoundDir() + file)))
+			return temp; // Mod dir file
+		else if (std::filesystem::exists(temp = (FranAudio::Globals::GetFallbackSoundDir() + file)))
+			return temp; // Fallback dir file
+		else
+			return "ERR";
+	}
 	else
-		return "ERR";
+	{
+		if (std::filesystem::exists(temp = (FranAudio::Globals::GetModDir() + file)))
+			return temp; // Mod dir file
+		else if (std::filesystem::exists(temp = (FranAudio::Globals::GetFallbackDir() + file)))
+			return temp; // Fallback dir file
+		else
+			return "ERR";
+	}
 };
 

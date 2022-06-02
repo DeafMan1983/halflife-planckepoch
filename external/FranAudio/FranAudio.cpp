@@ -12,6 +12,7 @@
 
 #include "FranAudio.hpp"
 #include "Sound.hpp"
+#include "Music.hpp"
 #include "Channel.hpp"
 
 #include "cl_entity.h"
@@ -39,10 +40,13 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 
 float orientation_vec[6] = {}; // This will be storing forward then up vectors
 
-void FranAudio::Globals::Init(const char* sndDir, const char* fallbackSndDir)
+void FranAudio::Globals::Init(const char* _sndDir, const char* _fallbackSndDir, const char* _modDir, const char* _fallbackDir)
 {
-	soundDir = sndDir;
-	fallbackSoundDir = fallbackSndDir;
+	soundDir = _sndDir;
+	fallbackSoundDir = _fallbackSndDir;
+
+	modDir = _modDir;
+	fallbackDir = _fallbackDir;
 
 	logFile.open(std::string(LOG_DIR) + "FranAudioLog.txt");
 
@@ -63,7 +67,12 @@ void FranAudio::Globals::Init(const char* sndDir, const char* fallbackSndDir)
 		LogMessage("ERR: OpenAL init - context applying error!!");
 	}
 
+	al_isFloatSupported = (FranAudio_AlFunction(alIsExtensionPresent, "AL_EXT_float32") == AL_TRUE);
+	al_isDoubleSupported = (FranAudio_AlFunction(alIsExtensionPresent, "AL_EXT_double") == AL_TRUE);
+
 	FranAudio_AlFunction(alListenerf, AL_GAIN, 100.0f);
+
+	FranAudio::Music::CurrentMusic = nullptr;
 
 	Refresh();
 }
@@ -91,6 +100,13 @@ void FranAudio::Globals::Shutdown()
 		//SDL_FREESOUND HERE MAYBE IDK
 	//}
 
+	if (FranAudio::Music::CurrentMusic != nullptr)
+	{
+		FranAudio::Music::CurrentMusic->Kill();
+		delete FranAudio::Music::CurrentMusic;
+		FranAudio::Music::CurrentMusic = nullptr; // Just In Case
+	}
+
 	ALCboolean closedt, contextt = false;
 
 	FranAudio_AlcFunction(alcMakeContextCurrent, contextt, openALDevice, nullptr);
@@ -109,14 +125,50 @@ const char* FranAudio::Globals::GetFallbackSoundDir()
 	return fallbackSoundDir.c_str();
 }
 
+const char* FranAudio::Globals::GetModDir()
+{
+	return modDir.c_str();
+}
+
+const char* FranAudio::Globals::GetFallbackDir()
+{
+	return fallbackDir.c_str();
+}
+
 void FranAudio::Globals::LogMessage(const char* message)
 {
 	logFile << ">>> " << message << std::endl;
 }
 
-ALCcontext* FranAudio::Globals::GetContext()
+ALCcontext* FranAudio::Globals::GetMainContext()
 {
 	return FranAudio::Globals::mainContext;
+}
+
+bool FranAudio::Globals::SetCurrentContext(ALCcontext* _cont)
+{
+	ALCboolean contextMadeCurrent = false;
+	if (!FranAudio_AlcFunction(alcMakeContextCurrent, contextMadeCurrent, openALDevice, _cont) || contextMadeCurrent != ALC_TRUE)
+	{
+		LogMessage("ERR: OpenAL init - context applying error!!");
+		return false;
+	}
+	return true;
+}
+
+bool FranAudio::Globals::IsFloatFormatSupported()
+{
+	return al_isFloatSupported;
+}
+
+bool FranAudio::Globals::IsDoubleFormatSupported()
+{
+	return al_isDoubleSupported;
+}
+
+bool FranAudio::Globals::IsHRTFSupported()
+{
+	return alc_isHRTFSupported;
 }
 
 
@@ -124,7 +176,7 @@ ALCcontext* FranAudio::Globals::GetContext()
 // API
 // =============
 
-void FRANAUDIO_API FranAudio::EmitSound(int _entityIndex, int _channel, const char* _sample, float _volume, float _attenuation, int _flags, int _pitch)
+void FRANAUDIO_API FranAudio::EmitSound(int _entityIndex, int _channel, const char* _sample, float _volume, float _attenuation, int _flags, int _pitch, int _spawnflags)
 {
 	if (_flags != 0)
 	{

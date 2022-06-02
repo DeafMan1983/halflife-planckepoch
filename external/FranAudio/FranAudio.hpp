@@ -17,6 +17,7 @@
 
 #include "AL/al.h"
 #include "AL/alc.h"
+#include "AL/alext.h"
 
 // Forward declaration of the CBaseEntity
 // is necessary because of some circular dependiencies
@@ -26,6 +27,16 @@ struct cl_entity_s;
 
 namespace FranAudio
 {
+	namespace SoundSpawnFlags 
+	{
+		// Fake scoped enum ehehehe
+
+		enum SoundSpawnFlags_e
+		{
+			NoMouthMovement = (1 << 1), // Don't move monsters' mouths
+		};
+	};
+
 	//constexpr int FA_MIN_CHANNELS = 16; 
 	//constexpr int FA_MAX_CHANNELS = 128;
 
@@ -42,24 +53,41 @@ namespace FranAudio
 		inline static std::string soundDir;
 		inline static std::string fallbackSoundDir;
 
+		inline static std::string modDir;
+		inline static std::string fallbackDir;
+
 		inline static std::ofstream logFile;
 
 		inline static ALCcontext* mainContext;
 
 		inline static ALCdevice* openALDevice;
 
+		inline static bool al_isFloatSupported;
+		inline static bool al_isDoubleSupported;
+		inline static bool alc_isHRTFSupported;
+
 #pragma warning(pop)
 	public:
-		static void Init(const char* sndDir, const char* fallbackSndDir);
+		static void Init(const char* _sndDir, const char* _fallbackSndDir, const char* _modDir, const char* _fallbackDir);
 		static void Refresh();
 		static void Shutdown();
 
 		static const char* GetModSoundDir();
 		static const char* GetFallbackSoundDir();
 
+		static const char* GetModDir();
+		static const char* GetFallbackDir();
+
 		static void LogMessage(const char* message);
 
-		static ALCcontext* GetContext();
+		//Unused
+		static ALCcontext* GetMainContext();
+
+		static bool SetCurrentContext(ALCcontext* _cont);
+
+		static bool IsFloatFormatSupported();
+		static bool IsDoubleFormatSupported();
+		static bool IsHRTFSupported();
 	};
 
 	// Creates a sound
@@ -69,7 +97,8 @@ namespace FranAudio
 		float _volume,
 		float _attenuation,
 		int _flags,
-		int _pitch);
+		int _pitch,
+		int _spawnflags);
 
 	void FRANAUDIO_API SetListenerTransform(Vector position, Vector up, Vector forward);
 	
