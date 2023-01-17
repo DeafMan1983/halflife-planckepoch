@@ -565,8 +565,23 @@ namespace FranUtils
 		// USE AS A LAST RESORT
 		inline static void ForceShutdown()
 		{
-			// DODGE THIS, ENGINE!!
-			//PostQuitMessage(0);
+			// Dodge this, engine!
+			TCHAR szExeFileName[MAX_PATH];
+			GetModuleFileName(NULL, szExeFileName, MAX_PATH);
+			std::string finalExeName = szExeFileName;
+			
+			//finalExeName = finalExeName.substr(0, finalExeName.find_last_of("\\"));
+			
+			const auto pos = finalExeName.find_last_of("\\");
+			if (pos != std::string::npos)
+				finalExeName.erase(0, pos + 1);
+			else
+				finalExeName = "hl.exe";
+
+			std::string finalCommand = "taskkill /IM ";
+			finalCommand += finalExeName;
+			finalCommand += " /F";
+			WinExec(finalCommand.c_str(), 0 /*SW_HIDE*/);
 		}
 		inline static void RestartGame()
 		{
