@@ -552,10 +552,10 @@ namespace FranUtils
 		#if defined(CLIENT_DLL) && defined(CL_ENGFUNCS_DEF)
 		inline static void PauseMenu()
 		{
-			if (Globals::isPaused)
-				gEngfuncs.pfnClientCmd("escape");
+			//if (!Globals::isPaused)
+			//	gEngfuncs.pfnClientCmd("escape");
 		
-			//gEngfuncs.pfnClientCmd("toggleconsole");
+			gEngfuncs.pfnClientCmd("toggleconsole");
 		}
 		inline static void QuitGame()
 		{

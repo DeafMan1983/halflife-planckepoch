@@ -60,6 +60,9 @@
     <ClCompile Include="..\..\external\FranAudio\ConversionUtils.cpp">
       <Filter>Source Files\external\FranAudio</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\external\FranAudio\Sentence.cpp">
+      <Filter>Source Files\external\FranAudio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\external\FranAudio\Channel.hpp">
@@ -87,6 +90,9 @@
       <Filter>Header Files\external\FranAudio</Filter>
     </ClInclude>
     <ClInclude Include="..\..\external\FranAudio\ConversionUtils.hpp">
+      <Filter>Header Files\external\FranAudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\external\FranAudio\Sentence.hpp">
       <Filter>Header Files\external\FranAudio</Filter>
     </ClInclude>
   </ItemGroup>

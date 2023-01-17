@@ -95,7 +95,7 @@ void FranAudio::Globals::Shutdown()
 		sound.Kill();
 	}
 
-	//for (auto& [dir, sound] : FranAudio::Sound::SoundsMap)
+	//for (auto& [dir, sound] : FranAudio::Sound::SoundWaveMap)
 	//{
 		//SDL_FREESOUND HERE MAYBE IDK
 	//}

@@ -40,7 +40,7 @@ namespace FranAudio
 	//constexpr int FA_MIN_CHANNELS = 16; 
 	//constexpr int FA_MAX_CHANNELS = 128;
 
-	constexpr std::string_view LOG_DIR = "C:\\Users\\Frantic\\Documents\\";
+	constexpr std::string_view LOG_DIR = "C:\\Users\\allen\\Documents\\";
 
 	class FRANAUDIO_API Globals
 	{

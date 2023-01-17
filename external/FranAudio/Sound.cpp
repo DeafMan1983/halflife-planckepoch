@@ -61,7 +61,10 @@ FranAudio::Sound::Sound(int _entityIndex, int _channel, const char* _sample, flo
 
 	FranAudio_AlFunction(alGenBuffers, 1, &sourceBuffer);
 	//FranAudio_AlFunction(alBufferData, sourceBuffer, GetFormat(sound.channelCount, sound.sourceFormat), mouthSoundBuffer, sound.samples.size(), sound.sampleRate);
-	FranAudio_AlFunction(alBufferData, sourceBuffer, FranAudio::Sound::GetFormat(sound.channelCount), sound.samples.data(), sound.samples.size() * 4 /* Float is 4x size of 8 bit int */, sound.sampleRate);
+	//FranAudio_AlFunction(alBufferData, sourceBuffer, FranAudio::Sound::GetFormat(sound.channelCount), sound.samples.data(), sound.samples.size() * 4 /* Float is 4x size of 8 bit int */, sound.sampleRate);
+	
+	const auto tempFormat = FranAudio::Sound::GetFormat(sound.channelCount);
+	FranAudio_AlFunction(alBufferData, sourceBuffer, tempFormat, sound.samples.data(), sound.samples.size() * 4 /* Float is 4x size of 8 bit int */, sound.sampleRate);
 
 	
 	FranAudio_AlFunction(alGenSources, 1, &sourceHandle);
@@ -209,7 +212,10 @@ bool FranAudio::Sound::Kill()
 	}
 
 	if (mouthSoundBuffer != nullptr)
+	{
 		delete[] mouthSoundBuffer;
+		mouthSoundBuffer = nullptr;
+	}
 
 	FranAudio_AlFunction(alSourceStop, sourceHandle);
 	FranAudio_AlFunction(alDeleteSources, 1, &sourceHandle);
@@ -241,7 +247,7 @@ void FranAudio::Sound::KillAllSounds()
 	while (SoundsVector.Size() > 0)
 	{
 		size_t beginsize = SoundsVector.Size();
-		for (int i = 0; i < beginsize; i++)
+		for (size_t i = 0; i < beginsize; i++)
 		{
 			if (beginsize > SoundsVector.Size())
 				break;
@@ -253,7 +259,7 @@ void FranAudio::Sound::KillAllSounds()
 
 inline bool FranAudio::Sound::PrecacheSound(std::string _dir)
 {
-	if (SoundsMap.find(_dir) == SoundsMap.end())
+	if (SoundWaveMap.find(_dir) == SoundWaveMap.end())
 	{
 		FranAudio::Globals::LogMessage(std::string(std::string("Trying to load ") + "\"" + _dir.c_str() + "\"").c_str());
 
@@ -269,7 +275,7 @@ inline bool FranAudio::Sound::PrecacheSound(std::string _dir)
 
 		FranAudio::Globals::LogMessage(std::string(std::string("Loaded: ") + "\"" + _dir.c_str() + "\"" + " - " + std::to_string(_sample.lengthSeconds) + " | " + std::to_string(_sample.channelCount) + " | " + std::to_string(_sample.sampleRate) + " | " + std::to_string(_sample.samples.size())).c_str());
 
-		SoundsMap.insert({_dir, _sample});
+		SoundWaveMap.insert({_dir, _sample});
 	}
 	
 	return true;
@@ -277,13 +283,13 @@ inline bool FranAudio::Sound::PrecacheSound(std::string _dir)
 
 inline nqr::AudioData& FranAudio::Sound::FindPrecachedSound(std::string _dir)
 {
-	if (SoundsMap.find(_dir) == SoundsMap.end())
+	if (SoundWaveMap.find(_dir) == SoundWaveMap.end())
 	{
 		return snd_emptyAudioData; // Return empty sound sample
 	}
 	else
 	{
-		return SoundsMap.at(_dir);
+		return SoundWaveMap.at(_dir);
 	}
 }
 

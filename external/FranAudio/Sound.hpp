@@ -101,10 +101,11 @@ namespace FranAudio
 
 		inline static FRANAUDIO_API FranUtils::FranVector<Sound> SoundsVector;
 
-		inline static std::map<std::string, nqr::AudioData> SoundsMap;
+		inline static std::map<std::string, nqr::AudioData> SoundWaveMap;
 
 		static void KillAllSounds();
 		
+		// Named "precache" but its actually just "cache"
 		static bool PrecacheSound(std::string _dir);
 
 		static nqr::AudioData& FindPrecachedSound(std::string _dir);

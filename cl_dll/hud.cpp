@@ -601,9 +601,10 @@ CHud::~CHud()
 	gBSPRenderer.Shutdown();
 	//RENDERERS END
 
-	FranAudio::Globals::Shutdown();
-
+	// HACK HACK HACK - FIX SEGFAULT AT SHUTDOWN
 	FranUtils::ForceShutdown();
+
+	FranAudio::Globals::Shutdown();
 }
 
 // GetSpriteIndex()
