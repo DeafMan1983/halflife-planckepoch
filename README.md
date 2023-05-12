@@ -1,3 +1,6 @@
+** DANGER: ** You need a font file to work with this modbase 
+https://github.com/edgarbarney/halflife-planckepoch/issues/12
+
 Current Status:
 https://www.moddb.com/mods/spirinity/news/status-report-and-a-small-announcement
 
@@ -9,7 +12,7 @@ Removed Features:
 - Fog. 
   - Obviously. Trinity has it's own.
   
-- Mirrors and Shiniy Surfaces. 
+- Mirrors and Shiny Surfaces. 
   - Ditto.
   
 - Particle System. 

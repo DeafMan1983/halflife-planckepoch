@@ -1951,6 +1951,31 @@ CStudioModelRenderer::CStudioModelRenderer()
 */
 CStudioModelRenderer::~CStudioModelRenderer()
 {
+	if (m_iNumStudioModels > 0)
+	{
+		for (int i = 0; i < m_iNumStudioModels; i++)
+			delete m_pStudioModels[i].cache.data;
+	}
+
+	if (m_iNumStudioDecals)
+	{
+		for (int i = 0; i < m_iNumStudioDecals; i++)
+		{
+			if (m_pStudioDecals[i].numpolys)
+			{
+				for (int j = 0; j < m_pStudioDecals[i].numpolys; j++)
+					delete[] m_pStudioDecals[i].polys[j].verts;
+
+				delete[] m_pStudioDecals[i].polys;
+			}
+
+			if (m_pStudioDecals[i].numverts)
+				delete[] m_pStudioDecals[i].verts;
+		}
+
+		memset(m_pStudioDecals, NULL, sizeof(m_pStudioDecals));
+		m_iNumStudioDecals = NULL;
+	}
 }
 
 /*
@@ -3349,7 +3374,12 @@ StudioRenderModel
 */
 void CStudioModelRenderer::StudioRenderModel()
 {
-	if (m_pCurrentEntity->curstate.renderfx == kRenderFxGlowShell)
+
+	// Save texture states before rendering, so we don't
+	// cause any bugs in HL by changing texture binds, etc
+	R_SaveGLStates();
+
+	if ( m_pCurrentEntity->curstate.renderfx == kRenderFxGlowShell )
 	{
 		m_pCurrentEntity->curstate.renderfx = kRenderFxNone;
 		StudioRenderFinal();
@@ -3367,6 +3397,9 @@ void CStudioModelRenderer::StudioRenderModel()
 	{
 		StudioRenderFinal();
 	}
+
+	// Restore saved states
+	R_RestoreGLStates();
 }
 
 /*
@@ -5013,6 +5046,10 @@ StudioRenderModelEXT
 */
 void CStudioModelRenderer::StudioRenderModelEXT()
 {
+	// Save texture states before rendering, so we don't
+	// cause any bugs in HL by changing texture binds, etc
+	R_SaveGLStates();
+
 	// I don't give a shit, make sure
 	glPushMatrix();
 	glMatrixMode(GL_MODELVIEW);
@@ -5047,6 +5084,9 @@ void CStudioModelRenderer::StudioRenderModelEXT()
 
 	if (m_pCvarModelsBBoxDebug->value > 0)
 		StudioDrawBBox();
+
+	// Restore saved states
+	R_RestoreGLStates();
 }
 
 /*

@@ -599,6 +599,9 @@ CHud::~CHud()
 	//RENDERERS START
 	gTextureLoader.Shutdown();
 	gBSPRenderer.Shutdown();
+	gPropManager.Shutdown();
+	gWaterShader.Shutdown();
+	gParticleEngine.Shutdown();
 	//RENDERERS END
 
 	// HACK HACK HACK - FIX SEGFAULT AT SHUTDOWN
@@ -768,6 +771,7 @@ void CHud::VidInit()
 	gParticleEngine.VidInit();
 	gMirrorManager.VidInit();
 	g_StudioRenderer.VidInit();
+	gPropManager.VidInit();
 	//RENDERERS_END
 
 	// Refresh sounds (not music)
